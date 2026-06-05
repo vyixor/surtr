@@ -43,7 +43,7 @@ You now have:
 - Local SurtrUI (IDE + Task Bot)
 - Remote WebUI (browser access to desktop, scripts, files)
 
-Full docs: [surtr.cu.ma/docs.php](http://screenbot.cu.ma/docs.php) or run `define` in Surtr.
+Full docs: [screenbot.cu.ma/docs.php](http://screenbot.cu.ma/docs.php) or run `define` in Surtr.
 
 ## How Surtr Works: The Basics
 

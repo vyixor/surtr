@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+           Surtr
+        </title>
+         <link rel="stylesheet" href="{{url_for('static', filename='css/surtrindex.css')}}">
+    </head>
+<body >
+
+
+
+
+
+<div id="main" style="
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+    z-index: 10;
+    background-image: radial-gradient(800px 300px at 20% 12%, rgba(255, 72, 28, 0.06), transparent 6%), linear-gradient(230deg, rgba(2, 2, 2, 1) 0%, rgba(16, 16, 18, 0.92) 28%, rgba(24, 22, 22, 0.86) 100%);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background .45s ease;
+    box-shadow: inset 0 80px 140px rgba(0, 0, 0, 0.7), inset 0 -40px 120px rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    flex-wrap: wrap;
+    align-content: center;
+
+">
+
+
+    <h1>Surtr Web UI Login Page</h1><br>
+    <P>Please provide the valid username and password to join </p>
+     <p id="info" style="color:red;"></p>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes"style="list-style-type: none;">
+            {% for category, message in messages %}
+                <li class="{{ category }}" style="color:yellow;">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+     <form id="frm" method="POST" >
+        <div><input id="uname" name="name" type="text" autocomplete="off" placeholder="Username"></div>
+        <div><input id="pswrd" name="pword" type="password" placeholder="Password"></div>
+        <div><input type="checkbox" id="spass">Show password</div>
+        <button type="submit" id="conectbtn"> Connect </button>
+     </form>
+    </div>
+
+    <script>
+
+      document.getElementById("frm").onsubmit=(e)=>{
+        e.preventDefault()
+      
+     
+     
+    let info = document.getElementById("info");
+    let usrname = document.getElementById("uname");
+    let pswd = document.getElementById("pswrd");
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) { // Check readyState for completion
+            if (this.status == 200) {
+                const recv = JSON.parse(this.responseText);
+                
+                try {
+                    window.location.href = recv.url;
+                    
+                } catch (err) { // Catch the parsing error specifically
+                    console.error("JSON parsing error:", err);
+                    info.textContent = "A JavaScript error occurred (parsing response)!";
+                }
+            } else {
+                // Handle non-200 responses (e.g., 401, 400)
+                info.textContent = this.responseText;
+            }
+        }
+    };
+
+    
+  xhttp.open("POST", "/parse", true);
+  formdta = new FormData()
+  formdta.append("name",usrname.value)
+  formdta.append("password",pswd.value)
+  xhttp.send(formdta);
+
+}
+
+// Toggle password visibility
+document.getElementById('spass').addEventListener('change', function() {
+    const pswrd = document.getElementById('pswrd');
+    if (this.checked) {
+        pswrd.type = 'text';
+    } else {
+        pswrd.type = 'password';
+    }
+});
+
+    </script>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+           Surtr Automation
+        </title>
+
+        {% if configs["usesurtrtheme"] == "yes"%}
+             <link rel="stylesheet" href="{{url_for('static', filename='css/surtrhome.css')}}">   
+        {% endif %}
+
+        {% if configs["usesurtrtheme"] == "no"%}
+             <link rel="stylesheet" href="{{url_for('static', filename='css/home.css')}}">   
+        {% endif %}
+         
+         
+    </head>
+<body >
+
+
+
+
+
+<div id="main" style="
+
+    background-size: cover;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+">
+
+
+    <h1>Surtr Web UI</h1>
+    
+    <a  href="/logout"><button id="logout">Log out</button></a>
+    <div id="tabs">
+        <div id="tabsdrag" style="
+     position: relative;
+    cursor: grab;
+    height: 100%;
+    width: 100%;
+    color: white;
+    background-color: black;
+    font-size: 38px;
+    text-align: center;
+    font-weight: 400;
+    border-radius: 10px;
+        ">&target;</div>
+        <button onclick="showTab('cli')">Terminal</button>
+        <!-- <button onclick="showTab('screen')">Desktop View</button> -->
+
+        <button onclick="showTab('files')">File Browser</button>
+        <button onclick="showTab('batch')">Script Builder</button>
+    </div>
+
+    <div id="cli-tab">
+        <div id="opts">
+        <form id="command-form">
+            <input type="text" id="command"  placeholder="Type a command..." autocomplete="off" autofocus>
+            <button type="submit">&triangleright;</button> 
+        </form>
+        <button id="close" onclick="closetab('cli-tab')">X</button>
+        </div>
+         
+        <pre id="output"></pre>
+    </div>
+
+    <div id="screen-tab">
+        <div id="disp">
+        <h3 style="text-align:center;text-shadow: 4px 1px 20px white;">Desktop<span onclick="onfullscreen()" style="    background: transparent;
+    color: white;
+    font-size: 28px;
+    border-radius: 9px;
+    cursor: pointer;
+    padding: 3px;
+    padding-top: 2px;
+    padding-bottom: 5px;
+    " title="Fullscreen">[&square;]</span></h3>
+         </div>
+        <div id="desk"
+        style="
+        resize:both;
+        overflow:auto;
+        width:fit-content;
+        height:fit-content;
+        "
+        >
+       <!--  <img id="desktop-stream" src="/stream" style="
+        max-width:100%; border:1px solid #ccc;width: inherit;height: inherit;
+        "> -->
+
+        {% if configs["usescreen"] == "yes" %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem;">
+    <div>
+        <button onclick="zoomIn()">Zoom +</button>
+        <button onclick="zoomOut()">Zoom -</button>
+        <button onclick="resetZoom()">Reset</button>
+        
+    </div>
+    <div>
+        
+        <button onclick="toggleFullscreen()">Fullscreen</button>
+        <button id="sunctl" onclick="audioplay()">🔊</button>
+        
+         <!-- Right half masked for moon  for theme toggle -->
+        <!--<button onclick="toggleTheme()"style="
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    align-items: center;
+    width: 48px;
+    height: 55px;
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" style="width: 100%;height: 100%;display: block;">
+    <circle cx="12" cy="12" r="5" fill="currentColor"/>
+      
+     <path d="M12 7a5 5 0 0 1 0 10 7 7 0 0 0 0-10z" fill="white"/>
+</svg>
+</button> -->
+
+    </div>
+</div>
+
+        <img id="screen" src="{{ url_for('video_feed') }}" />
+        <!-- Overlay -->
+  <div id="overlay" style="
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      font-size: 1.2em;
+      border-radius: 8px;
+      visibility: hidden;
+  ">
+    <!-- Spinner -->
+    <div class="spinner"></div>
+    <div style="margin-top: 12px;">Connection lost. Reconnecting…</div>
+  </div>
+     
+
+    {% endif %}
+
+    {% if configs["useaudio"] == "yes" and configs["usescreen"] == "yes" %}
+   
+     <audio id="sounds" controls autoplay style="display:none;">
+        <source  src="{{ url_for('audio_feed') }}" type="audio/wav">
+    </audio>
+     {% endif %}
+
+     {% if configs["useaudio"] == "yes" and configs["usescreen"] == "no" %}
+      <div style="width:100%; height:fit-content; text-align:center;">
+        <button id="sunctl" onclick="audioplay()" style="font-size: 100px;border-radius: 10px;">🔊</button>
+     <audio id="sounds" controls autoplay style="display:none;">
+        <source  src="{{ url_for('audio_feed') }}" type="audio/wav">
+    </audio>
+    </div>
+     {% endif %}
+        </div>
+    </div>
+
+    <div id="files-tab" style="display: none;">
+        <button id="close" style="float: right;background-color: transparent;color: blue;font-size: x-large;" onclick="closetab('files-tab')">X</button>
+         <h3>File Browser</h3>
+         {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}" style="color:yellow;">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+       <p><strong>Current Path:</strong> <span id="current-path"></span></p>
+    <ul id="file-list"></ul>
+    </div>
+
+    <div id="batch-tab" style="display: none;">
+          <button id="close" style="float: right;background-color: transparent;color: blue;font-size: x-large;" onclick="closetab('batch-tab')">X</button>
+        <h3>Script builder</h3>
+        <div id="cntner">
+        <a id="runfile" href="/script_builder">Click to open script builder</a>
+        </div>
+        
+    </div>
+
+
+
+    </div>
+
+
+    <script>
+        if(sessionStorage.getItem("screenbot4environmentsessionrunning") !== null){
+        document.body.innerHTML="<p> Your new session creation hasn't been completed click <a href='/yourenv'>here</a> to continue your session creation </p>"
+     }
+     
+    const PING_INTERVAL = 3000; // ms
+    let wasDown = false;
+
+    const overlay = document.getElementById("overlay");
+
+    let videoEnabled = false;
+
+
+// if streaming is enabled at startup ---
+async function checkStreamAvailable() {
+    try {
+        const res = await fetch("{{ url_for('video_feed') }}", { method: "HEAD" });
+        if (res.ok) {
+            videoEnabled = true;
+        } else {
+            throw new Error("Disabled by server");
+        }
+    } catch {
+        videoEnabled = false;
+    }
+}
+
+checkStreamAvailable()
+
+async function pingServer() {
+    try {
+        const response = await fetch("/ping", { cache: "no-store" });
+        if (!response.ok) throw new Error("Bad status " + response.status);
+
+        
+        if (wasDown) {
+            overlay.style.visibility = "hidden";
+            console.log("Server back online, reloading page...");
+            location.reload();
+        }
+        wasDown = false;
+    } catch (err) {
+        if (!wasDown) {
+            console.error("Lost connection to server");
+            if (videoEnabled){
+            overlay.style.visibility = "visible";
+        }
+        }
+        wasDown = true;
+    }
+}
+
+setInterval(pingServer, PING_INTERVAL);
+        
+        
+        
+        
+        
+        
+        function closetab(tabname){
+         var tn = document.getElementById(tabname)
+             tn.style.display="none"
+
+        }
+
+
+
+let currentPath = '';
+        const form = document.getElementById('command-form');
+const output = document.getElementById('output');
+
+form.onsubmit = async (e) => {
+    e.preventDefault();
+    const cmd = document.getElementById('command').value;
+    output.textContent = ""; // clear previous output
+    output.scrollTop = 0;
+
+    const res = await fetch('/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: cmd })
+    });
+
+    const contentType = res.headers.get('content-type') || '';
+
+    // if server returned JSON (old behavior / error), parse it and show
+    if (contentType.includes('application/json')) {
+        try {
+            const j = await res.json();
+            output.textContent = j.output ?? JSON.stringify(j);
+        } catch (err) {
+            output.textContent = 'Failed to parse JSON response';
+        }
+        output.scrollTop = output.scrollHeight;
+        return;
+    }
+
+    // If body is null (some servers), just read text() as fallback
+    if (!res.body) {
+        const text = await res.text();
+        output.textContent = text;
+        output.scrollTop = output.scrollHeight;
+        return;
+    }
+
+    // Streaming path: read chunks from the ReadableStream
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        //output.textContent += chunk;
+        output.innerHTML += chunk;
+        output.scrollTop = output.scrollHeight; // auto-scroll to bottom
+    }
+};
+
+
+        function showTab(tab) {
+            document.getElementById('cli-tab').style.display = tab === 'cli' ? 'block' : 'none';
+            //document.getElementById('screen-tab').style.display = tab === 'screen' ? 'block' : 'none';
+            document.getElementById('files-tab').style.display = tab === 'files' ? 'block' : 'none';
+            document.getElementById('batch-tab').style.display = tab === 'batch' ? 'block' : 'none';
+
+            if (tab === 'files') {
+                loadFiles(currentPath || '');
+             }
+        }
+              
+        var ctl = document.getElementById("sunctl")
+        function audioplay() {
+         var snd =  document.getElementById("sounds")
+         snd.style.visibility="hidden"
+         
+          if (snd.paused) {
+          snd.play();
+
+          ctl.textContent="🔊"
+          } 
+          else {
+           snd.pause();
+           ctl.textContent="🔇"
+          }
+         }
+      
+
+// detect is audio is on at startup
+ var snd =  document.getElementById("sounds")
+ if (snd.paused) {
+   ctl.textContent="🔇"
+} 
+else {
+    ctl.textContent="🔊"
+}
+
+ async function loadFiles(path) {
+    const res = await fetch(`/browse?path=${encodeURIComponent(path)}`);
+    const data = await res.json();
+    const list = document.getElementById('file-list');
+    const current = document.getElementById('current-path');
+    list.innerHTML = "";
+
+    if (data.error) {
+        list.innerHTML = `<li>Error: ${data.error}</li>`;
+        return;
+    }
+
+    currentPath = data.current_path;
+    current.textContent = currentPath;
+
+    // Add "go up" link
+    const parentParts = data.current_path.split(/[\\/]/).filter(Boolean);
+    if (parentParts.length > 1) {
+        const parent = parentParts.slice(0, -1).join('/');
+        list.innerHTML += `<li><a href="#" onclick="loadFiles('${parent.replace(/\\/g, '\\\\')}')">[..]</a></li>`;
+    }
+
+    data.items.forEach(item => {
+        const safePath = item.path.replace(/\\/g, '\\\\'); // escape backslashes
+
+        if (item.is_dir) {
+            list.innerHTML += `<li><a href="#" onclick="loadFiles('${safePath}')">&#128194;[${item.name}]</a></li>`;
+        } else {
+            list.innerHTML += `<li>&#128196;${item.name} - <a href="/download?path=${encodeURIComponent(item.path)}" target="_blank"><span id='down'>&DownArrowBar;</span></a></li>`;
+        }
+    });
+}
+
+
+// for non screen touch drag options
+dragtabs(document.getElementById("tabs"));
+
+
+function dragtabs(elmnt) {
+
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+ document.getElementById(elmnt.id + "drag").onmousedown =(e)=>{
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = stopDrag;
+    
+    document.onmousemove = (e)=>{
+    e = e || window.event;
+    e.preventDefault();
+    
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+    }
+  
+}
+
+
+  function stopDrag() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+
+// touch screens
+touchmode(document.getElementById("tabs"));
+function touchmode(elmnt) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    document.getElementById(elmnt.id + "drag").ontouchstart = (e)=>{
+    e = e || window.event;
+    
+    pos3 = e.touches.item(0).clientX;
+    pos4 = e.touches.item(0).clientY;
+    document.ontouchend = closetouch;
+    
+    document.ontouchmove = (e)=>{
+       
+       pos1 = pos3 - e.touches.item(0).clientX;
+       pos2 = pos4 - e.touches.item(0).clientY;
+       pos3 = e.touches.item(0).clientX;
+       pos4 = e.touches.item(0).clientY;
+
+       
+       elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+       elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+};
+
+}
+
+  
+  function closetouch() {
+    document.ontouchend = null;
+    document.ontouchmove = null;
+  }
+
+
+
+
+  // fullscreen
+
+  function onfullscreen(){
+    var fs = document.getElementById("screen");
+  if (fs.requestFullscreen) {
+    fs.requestFullscreen();
+  } else if (fs.webkitRequestFullscreen) { /* Safari */
+    fs.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+   fs.msRequestFullscreen();
+  }
+}
+  
+
+// later codes
+
+let scale = 1;
+const screenImg = document.getElementById('screen');
+
+function zoomIn() {
+    scale += 0.1;
+    applyZoom();
+}
+
+function zoomOut() {
+    scale = Math.max(0.1, scale - 0.1);
+    applyZoom();
+}
+
+function resetZoom() {
+    scale = 1;
+    applyZoom();
+}
+
+function applyZoom() {
+    screenImg.style.transform = `scale(${scale})`;
+    screenImg.style.transformOrigin = 'top left';
+}
+
+// Fullscreen toggle
+function toggleFullscreen() {
+   onfullscreen()
+}
+
+
+
+// Theme toggle
+//function toggleTheme() {
+//    document.body.classList.toggle('light-mode');
+//}
+
+
+
+// Drag/pan logic
+let isDragging = false;
+let startX, startY;
+let scrollLeft, scrollTop;
+
+const desk = document.getElementById("desk");
+
+desk.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    startX = e.pageX - desk.offsetLeft;
+    startY = e.pageY - desk.offsetTop;
+    scrollLeft = desk.scrollLeft;
+    scrollTop = desk.scrollTop;
+    desk.style.cursor = "grabbing";
+});
+
+desk.addEventListener("mouseleave", () => {
+    isDragging = false;
+    desk.style.cursor = "grab";
+});
+
+desk.addEventListener("mouseup", () => {
+    isDragging = false;
+    desk.style.cursor = "grab";
+});
+
+desk.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - desk.offsetLeft;
+    const y = e.pageY - desk.offsetTop;
+    const walkX = (x - startX);
+    const walkY = (y - startY);
+    desk.scrollLeft = scrollLeft - walkX;
+    desk.scrollTop = scrollTop - walkY;
+});
+    </script>
+</body>
+</html>

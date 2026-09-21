@@ -1,0 +1,2330 @@
+
+SURTR VERSION 4.0 DOCUMENTATION
+
+Surtr Help Documentation
+Introduction
+surtr is a powerful command-line interface 
+(CLI) automation tool for Windows, designed to simplify repetitive tasks, enhance productivity, and 
+enable sophisticated automation workflows. Whether you’re automating mouse clicks, keyboard input, 
+image recognition, file operations, or system monitoring, surtr provides an intuitive and extensible 
+framework to streamline your processes. With its robust command set and flexible scripting capabilities, 
+surtr is ideal for developers, IT professionals, gamers, and anyone looking to automate interactions 
+with their Windows environment.
+
+Why Choose surtr?
+Versatile Automation: Control mouse, keyboard, windows, files, and more with a single tool.
+Image and Text Recognition: Interact with GUI elements using image detection and OCR, perfect for dynamic applications.
+Conditional Logic and Loops: Build intelligent scripts with if, else, and looping constructs.
+System Integration: Monitor CPU, RAM, disk usage, and manage windows for comprehensive automation.
+Customizable: Register your own commands to tailor surtr to your needs.
+Error Handling: Robust error management ensures reliable script execution.
+Privacy and security protection with inbuilt guest mode for administerative commands protection
+Advanced text manipulation (lower/upper case, base64)
+JSON operations
+enhanced file management (copy/move)
+integer conversion, macro recorder
+built-in web fetcher/downloader (Fetcher) and more.
+
+Use Cases
+Data Entry:
+Automate form filling or report generation.
+GUI Automation:
+Click buttons, navigate menus, or interact with applications using image-based targeting.
+System Administration: 
+Monitor system resources and automate maintenance tasks.
+Gaming: 
+Create macros for repetitive in-game actions.
+File Management: 
+Automate file organization, backups, or batch processing.
+Web Scraping: 
+Use Fetcher for extraction and downloads.
+Text Processing: 
+Manipulate and analyze text with OCR and string commands.
+
+This documentation provides a detailed guide to all surtr commands, complete with examples to demonstrate 
+their power and enhance your automation experience.
+Getting Started
+System Requirements
+Operating System: Windows 10 or 11 (64-bit)
+RAM: 4 GB minimum (8 GB recommended)
+Disk Space: 150-200 MB for installation
+Dependencies: .NET Framework 4.8 or later (for image processing and system commands)
+Installation
+Download surtr: Download the latest version (EXE setup file).
+Free Version (Community Edition): https://github.com/Evic7/surtr
+Latest Release: https://github.com/Evic7/surtr/releases/tag/v4.0
+Pro Upgrade: https://evandervictor.gumroad.com/l/surtr
+Run the EXE setup file.
+Add to PATH (optional): Add the surtr directory to your system’s PATH for easy CLI access.
+Verify Installation: Run surtr --version to confirm the tool is installed correctly.
+
+Run a Script: Create a .as file (e.g., myscript.as) and execute it with surtr run myscript.as or 
+modify the default.as script in the surtr directory and run surtr without an argument 
+and surtr will automatically execute the default.as script if its found in surtr directory.
+Script Structure
+Scripts are written in plain text files with an .as extension.
+Each line contains a command, arguments.
+Optional comments are started with ~~.
+Use variables ({{name}}) and labels for modular scripting.
+Stop labels with exit.
+End scripts with stop or stopScript to exit cleanly.
+Close surtr with end.  
+Use surtr tray icon (the icon with the red sword) options to hide/show or close window.
+
+
+Command Reference
+Below is a detailed explanation of all surtr commands, organized by category, with syntax, descriptions,
+and practical examples.Mouse Commands Control mouse movements, clicks, drags, and scrolls with precision, supporting both coordinate-based 
+and image-based interactions.
+
+
+##mouse
+Performs mouse functions
+
+Move the mouse cursor to a specific position or the center of an image.
+Syntax:mouse move x y speed: Move to coordinates (x, y)
+at the specified speed (1–10, higher is faster).
+
+mouse move imagepath speed: Move to the center of the specified image on the screen.
+
+Description: Moves the mouse smoothly to a target location. Image-based movement uses computer vision to locate the image,
+making it ideal for dynamic UIs.
+Example:
+
+~~  Move to (100, 200) at speed 5
+mouse move 100 200 5  
+
+~~  Move to the center of button.png at speed 3
+mouse move button.png 3  
+
+Use Case: Navigate to a “Save” button in an application, even if its position varies.
+
+NOTE: Most image types are supported
+
+drag the mouse to a position or between images.
+Syntax:mouse drag x y speed: Drag to coordinates (x, y) at the specified speed.
+mouse drag imagepath speed: Drag from the current position to the center of the image.
+mouse drag image1.png image2.png speed: Drag from the center of image1.png to image2.png.
+
+Description: Simulates a mouse drag operation, useful for drag-and-drop interfaces or repositioning elements.
+Example:
+
+mouse drag 300 400 5  
+~~ Drag to (300, 400) at speed 5
+
+~~  Drag to the center of icon.png
+mouse drag icon.png 2
+
+~~  Drag from start.png to end.png at speed 3
+mouse drag start.png end.png 3  
+
+Use Case: Move files in a file explorer by dragging their icons to a target folder.
+NOTE: Most image types are supported
+
+
+Perform mouse clicks at specific positions or on images.
+Syntax:
+mouse click: Single left-click at the current position.
+mouse rightClick [x y | imagepath] [interval]: Right-click at coordinates or on an image, with optional interval (seconds).
+mouse doubleClick [x y | imagepath] [interval]: Double-click.
+mouse tripleClick [x y | imagepath] [interval]: Triple-click.
+
+Description: Simulates various mouse clicks. The optional interval specifies the delay between clicks (default: 0.1s).
+Example:
+~~  Left-click at current position
+mouse click  
+
+~~  Right-click at (500, 600) with 0.5s delay
+mouse rightClick 500 600 0.5 
+
+~~  Double-click the submit.png image
+mouse doubleClick submit.png  
+
+Use Case: Automate form submissions by clicking a “Submit” button identified by its image.
+NOTE: Most image types are supported
+
+Scroll the mouse vertically or horizontally.
+Syntax:mouse scroll distance: Scroll vertically (positive for down, negative for up).
+mouse scrollH distance: Scroll horizontally (positive for right, negative for left).
+mouse scrollV distance: Scroll vertically (same as mouseScroll).
+
+Description: Controls mouse wheel scrolling for navigating documents or web pages.
+Example:
+~~  Scroll down 5 units
+mouse scroll 5  
+
+~~  Scroll left 3 units
+mouse scrollH -3  
+
+Use Case: Scroll through a long PDF or webpage to reach a specific section.
+
+
+
+
+
+##Keyboard Commands
+
+Simulate keyboard input for text entry and shortcuts.
+
+type:Type text or special variables at a specified speed.
+Syntax:keyBoard type speed text: Type the specified text at the given speed (seconds per character, e.g., 0.3).
+Special variables: {{login}} (current user), {{date}} (current date, YYYY-MM-DD), {{time}} (current time, HH:MM:SS).
+
+Description: Simulates typing, useful for form filling or scripting text input. Special variables 
+dynamically insert system information.
+
+Example:
+
+~~  Types greeting with user and date
+keyBoard type 0.3 Hello, {{login}}!  Today is {{date}}.  
+
+Use Case: Automate login forms by typing usernames and timestamps.
+
+Key Press/Hold/Release:Simulate pressing, holding, or releasing keys.Syntax:keyBoard press key: Press and release a key.
+keyBoard hold key: Hold a key down.
+keyBoard release key: Release a held key.
+keyBoard press key: Press and release a key
+Supported Keys: Includes letters (a-z), numbers (0-9), symbols, and special keys (ctrl, alt, shift, f1–f24, enter, backspace, esc, win, etc.).
+ALL SUPPORTED KEYS
+
+LETTERS
+A-Z,a-z
+
+NUMBERS
+'0', '1', '2', '3', '4', '5', '6', '7',
+'8', '9'
+SYMBOLS
+'\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(',
+')', '*', '+', ',', '-', '.', '/',  ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~',
+SPECIAL KEYS
+'accept', 'add', 'alt', 'altleft', 'altright', 'apps', 'backspace',
+'browserback', 'browserfavorites', 'browserforward', 'browserhome',
+'browserrefresh', 'browsersearch', 'browserstop', 'capslock', 'clear',
+'convert', 'ctrl', 'ctrlleft', 'ctrlright', 'decimal', 'del', 'delete',
+'divide', 'down', 'end', 'enter', 'esc', 'escape', 'execute', 'f1', 'f10',
+'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17', 'f18', 'f19', 'f2', 'f20',
+'f21', 'f22', 'f23', 'f24', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9',
+'final', 'fn', 'hanguel', 'hangul', 'hanja', 'help', 'home', 'insert', 'junja',
+'kana', 'kanji', 'launchapp1', 'launchapp2', 'launchmail',
+'launchmediaselect', 'left', 'modechange', 'multiply', 'nexttrack',
+'nonconvert', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6',
+'num7', 'num8', 'num9', 'numlock', 'pagedown', 'pageup', 'pause', 'pgdn',
+'pgup', 'playpause', 'prevtrack', 'print', 'printscreen', 'prntscrn',
+'prtsc', 'prtscr', 'return', 'right', 'scrolllock', 'select', 'separator',
+'shift', 'shiftleft', 'shiftright', 'sleep', 'space', 'stop', 'subtract', 'tab',
+'up', 'volumedown', 'volumemute', 'volumeup', 'win', 'winleft', 'winright', 'yen',
+'command', 'option', 'optionleft', 'optionright'
+
+Example:
+~~  Copies selected text (Ctrl+C)
+keyBoard hold ctrl
+keyBoard press c
+keyBoard release ctrl  
+
+Use Case: Automate copy-paste operations or keyboard shortcuts in applications.
+
+##Conditional Commands
+
+Create dynamic workflows with conditional logic and loops.
+If/ElseExecute commands based on conditions using conditional or logical operators.
+
+Syntax:if value ?operator value ?run command ?else command: Run a command if the condition is true, with an optional ?else for false cases.
+
+if ( {{name}} ?equ john ) ?run msg Hi john! ?else msg not john!
+if ( {{name}} ?equ john  ?or {{name}} ?equ "john doe" ) ?run msg Hi john! ?else msg not john!
+
+using switches:
+You can switch from simple statement to command condition by using the ctype parameter 
+it can be set as global using set command or inline in the if statement
+
+~~ set globally
+set {{ctype}} cmd ~~ (default) all if statements will use the command statement method
+set {{ctype}} stmt ~~  all if statements will use the normal text statement method
+
+~~ set inline
+ if ctype:cmd userInput Do you love surtr? ?equ yes ?run msg Awesome! ?else msg Try it more! 
+
+
+if not command ?operator value ?run command ?else command ~~ Run if the condition is false.
+
+Conditional Operators:
+?equ: Equal to
+?nequ: Not equal to
+?cntn: Contains (for text)
+?grtn: Greater than (numbers only)
+?lstn: Less than (numbers only)
+
+Logical Operators:
+?and
+?or
+
+
+Some Supported Commands:
+
+seeImage  > True/False
+msg  > True/False
+confirm > True/False
+userInput > text
+readImage > text
+readImageLanguages > text
+readScreen > text
+talking > True/False
+runCmd > text
+voices > text
+screenWidth > number
+screenHeight > number
+fileman > True/False/text/number
+inWindowTitle > text
+windowList > text
+focusWindow > text
+focusedWindow > text
+minimizeWindow > text
+maximizeWindow > text
+resetWindow > text
+closeWindow > text
+clipboardPaste > text
+watchStatus > text
+changeDetected > number
+filesWatched > text
+restoreFile > text
+timer > number
+pixelColor > text
+waitPixelColor > text
+getPixelColorRegion > text
+colorExistsInRegion > text
+colorExistsInRegionSimilar > text
+toPixel > text
+toHex > text
+colorExistsInImage > text
+colorExistsInImageSimilar > text
+getEnv > number/text (depending on the argument)
+mousePositionX > number
+mousePositionY > number
+mousePosition > text
+getValue > text/number/True/False
+getWindowX > number
+getWindowY > number
+getWindowWidth > number
+getWindowHeight > number
+
+Example:
+
+if userInput Do you love surtr? ?equ yes ?run msg Awesome!  ?else msg Try it more! 
+if  not seeImage save.png ?run msg Save button not found ?else click
+
+Use Case: Prompt users for confirmation before deleting files or check for a button before clicking.
+NOTE: Most image types are supported
+
+
+##while Command
+The while command executes its associated command block(s) as long as a specified condition remains True.
+Syntax: while <condition> ?run <command>
+example: 
+while msg ok ?run msg cool 
+
+Note: while and until command condition works best with the default condition type (type:cmd)
+
+##until Command
+The until command executes its associated command block(s) until specified condition becomes True.
+Syntax: until <condition> ?run <command>
+example: 
+until msg ok ?run msg cool 
+Note: while and until command condition works best with the default condition type (type:cmd)
+
+##not command
+used in negating condition or to check if a command or condition is not true
+syntax not <command|condition>
+example:
+~~ if username is micheal return false else return true
+emit ?exec "not userInput username name ?equ micheal"
+
+
+##super arguments
+these are  surtr special arguments that carry special functions
+all special arguments starts with ?
+here are some special arguments
+?run // used by some commands to run other commands
+?else // used by if command to perform else functions
+?arg // used for adding arguments to run label command
+?int  // convert to integer
+?calc  // can perform calculations 
+?var // can call variables in places normal texts or commands can't
+?exec // execute and replace command return values if available
+?raw // raw string no parsing
+?str // parses texts eg \n becomes new line can also use ?str-lower to parse with lowercase or ?str-upper to parse with uppercase
+
+Example:
+
+emit add 1000 and 23335 and 300 = ?calc "1000 + 23335 + 300"
+emit ?str-lower "CHANGE TO LOWER CASE"
+
+Global super argument
+Super arguments that can be called any where in a command argument and does not need to be called with a specific command is called a global 
+super argument
+Example:
+
+~~ normal super argument
+
+if ({{name}} ?equ john) ?run msg hi john ?else msg not john
+
+~Global super argument 
+emit ?str "Today is friday.\nAnd am so happy"
+
+Tip: global super arguments supports parenthesis example: emit ?str (Today is friday.\nAnd am so happy)
+##EachOnScreen
+
+Iterate over multiple instances of an image on the screen.Syntax:eachOnScreen imagepath ?run command: Execute a command 
+for each image instance, using {{imageX}} and {{imageY}} for positions.
+
+Description: Loops through all occurrences of an image, executing the specified command for each. Useful for batch 
+processing GUI elements.
+Example:
+eachOnScreen textfile.png ?run move {{imageX}} {{imageY}} 5  ~~  Move to each text file icon
+
+Use Case: Open multiple text files visible on the desktop by clicking their icons.
+NOTE: Most image types are supported
+
+##Image Commands
+
+Interact with on-screen images for precise automation.
+SeeImage:Detect if an image is present on the screen.
+Syntax:seeImage imagepath: Returns true if the image is found, false otherwise.
+seeImage imagepath left top width height: Check within a specific screen region.
+
+Description: Uses computer vision to detect images, supporting automation in dynamic UIs.
+Example:
+
+if seeImage login.png ?run click ?else msg Login button not found
+
+~~  Check for logo in a 300x300 region
+seeImage logo.png 100 100 300 300  
+
+Use Case: Verify the presence of a “Login” button before proceeding.
+NOTE: Most image types are supported
+
+
+##labels
+labels are one of the most important part in surtr scripts,they act as checkpoints in script
+there are two types of label 
+1) normal label : these are normal label in surtr scripts and can be controlled by the run command
+example: 
+
+~~ create a label
+
+newlabel:
+command here
+~~ end the label
+end:
+
+~~ run a label
+
+run newlabel:
+
+2) transparent label : these are special labels that hides its content when script is executed and its content can only be executed when
+called by the run command its label names starts with _
+
+example:
+~~ create a transparent label
+_newtransparentlabel:
+command here
+~~ end the label
+end:
+
+~~ run a transparent label
+
+run _newtransparentlabel:
+
+ Transparent label can also be used as multi line comments as long as you do not run it
+example:
+
+_transparentlabelascomment:
+surtr will skip these part :)
+end:
+
+commands
+
+
+
+##Run Commands
+Execute scripts, labels, or commands with arguments.
+Run:Run external scripts or specific labels.
+Syntax:run script.as: Run an external script.
+run label: Run a label in the current script.
+run script.as label: Run an external script starting from a label 
+
+Description: Enables modular scripting by running external scripts or specific sections (labels) with optional arguments.
+
+The run command beheaves differently by the way its called 
+
+1) the run script.as : this run method runs a new ".as" script given by the user clearing all old script temporary data and
+labels being executed before
+2) the run script.as label: : same as run script.as but instead it jumps to a label specified by the user and start from there
+3) the run label: : this one works different from other run method it uses four stages 
+i) find the label given by the user in the surtr label cache 
+ii) collect all commands under the label into a temporary command holder {destroys any existing command holder and create a new 
+one if any command is stll executing in the temporary command holder (this means it will stop collecting commands once another
+label is discovered)} 
+iii) execute commands collected 
+iv) destroy temporary command holder    
+
+
+
+Example:
+run processFiles: ?arg file1.txt file2.txt
+
+
+run mover:
+
+mover:
+~~  Move to (100, 200) at speed 5
+move 100 200 5 
+end:
+
+Use Case: Reuse common tasks (e.g., file processing) across multiple scripts.
+NOTE: always notify the end of a label with end: so surtr can know where the label stops
+
+
+##QuickRun
+Run a command and exit immediately.
+Syntax:quickRun command: Execute a single command and terminate the script.
+
+Example:
+
+quickRun msg surtr completed the task!
+
+Use Case: Display a one-time notification without running a full script.
+
+
+##Wait Command
+
+Pause script execution for a specified duration.
+Syntax:wait seconds: Pause for the specified number of seconds.
+
+Example:
+
+~~  Pause for 5 seconds
+wait 5  
+
+Use Case: Wait for an application to load before performing the next action.
+
+
+## Command Separators and Joiners
+
+In Surtr, most commands are written on a single line.
+To split a command across multiple lines, use the command joiner `^`.
+
+Example:
+emit hi can you write^
+an Auto Script file.
+
+Output:
+hi can you write an Auto Script.
+or use double '^^' if you do not want to keep adding '^'  at every end.
+
+Example
+^^ emit can you
+write an Auto Script file ^^ 
+---
+
+Multiple Commands in One Line
+To execute multiple commands on the same line, use the command separator `++`.
+
+Example:
+emit hi ++ emit cool
+
+You can also use the multi-line command separator format `<++ ++>` (written as `<++` to open and `++>` to close).
+
+Example:
+<++
+emit hi
+emit ok
+++>
+
+Surtr interprets this as:
+emit hi ++ emit ok
+
+---
+
+Using Multi-line Separators in Conditionals
+
+Multi-line separators can also be used within `if` commands.
+
+Example:
+if empty {{myvar}} ?run <++
+msg This variable is empty
+++>
+
+---------
+
+Block Separator and parent commands
+
+Block Separator (+>)
+Used only within Parent Commands to separate command blocks managed by that parent and are functional only within command separators ++ .
+
+Parent Commands
+
+Parent Commands are specialized instructions that manage the execution of one or more sub-blocks of code. They are the only 
+commands that can utilize the Block Separator (+>).
+
+The full list of Parent Commands is:
+
+if
+
+repeat
+
+while
+
+until
+
+splitRun
+
+eachOnScreen
+
+textOnScreen
+
+Example Usage (Simplified):
+
+if ctype:stmt {{i}} ?grtn 10 ?run <++
+emit ok 
+msg success +> 
+set {{i}} 0
+++>
+
+Here, the if Parent Command is responsible for executing both msg success (if the condition is met) and the block starting with set {{i}} 0 (the next block in the sequence).
+
+More examples:
+
+~~ using repeat
+
+set {{i}} 0
+repeat -1 <++  ~~ using -1  for infinite loop
+ if getValue i ?equ 100 ?run  msg reached 100
+ stop +> 
+ if getValue i ?equ 50 ?run  msg reached 50 +>
+ set {{i}} ?calc "{{i}} + 1"
+ emit {{i}}
+++>
+
+~~ using while
+
+set {{i}} 0
+while getValue i ?lstn 1000 ?run <++
+if getValue i ?equ 100 ?run  msg reached 100 ++ stop +>
+if getValue i ?equ 50 ?run  msg reached 50 +>
+set {{i}} ?calc "{{i}} + 1"
+emit {{i}}
+++>
+
+
+##Say and Talk Commands
+Generate audio output for notifications or file reading.
+Syntax:say voice speed text: Speak text synchronously with 
+the specified voice (e.g., voice-0, voice-1) and speed (-10 to 10, 0 is normal).
+talk voice speed text|file: Speak asynchronously, allowing other commands to run.
+voices: List available voices.
+talking: Returns true if a talk command is active.
+stopTalking: Stop ongoing speech.
+
+Example:
+
+say voice-0 0 Welcome to surtr!
+talk voice-1 0 notes.txt  ~~  Read notes.txt aloud asynchronously
+if talking ?run msg Still speaking ?else msg Done speaking
+
+Use Case: Provide audio feedback during automation or read log files aloud.
+NOTE: only texts files are supported  while using file
+TIP: add a colon and a desired volume (0-100) number after the speed number for volume control
+Example:
+~~ say the text with a normal speed an volume of 50
+say voice-0 0:50 Welcome to surtr! 
+
+
+
+##Screenshot Commands
+Capture screenshots of the screen or specific regions.
+Syntax:screenShot filename: Capture the full screen.
+screenShot left top width height filename: Capture a specific region.
+screenShot mouse width height filename: Capture around the mouse position.
+
+Example:
+~~  Capture full screen
+screenShot desktop.jpg
+
+~~  Capture a 300x300 region
+screenShot 100 100 300 300 region.jpg  
+
+~~  Capture 50x50 around mouse
+screenShot mouse 50 50 mouse_area.jpg  
+
+Use Case: Document UI states or save screenshots for verification.
+NOTE: save to png or jpg for reuse case
+
+##screenShotMonitor
+Capture screenshots or specific regions of the screen of different monitors connected to the computer.
+Syntax:screenShotMonitor monitorindex filename: Capture the full screen.
+screenShotMonitor monitorindex left top width height filename: Capture a specific region.
+screenShotMonitor monitorindex mouse width height filename: Capture around the mouse position.
+
+Example:
+~~  Capture full screen on monitor 1
+screenShotMonitor 0 desktop.jpg
+
+~~  Capture a 300x300 region on monitor 2
+screenShotMonitor 2 100 100 300 300 region.jpg  
+
+~~  Capture 50x50 around mouse on monitor 1
+screenShotMonitor 1 mouse 50 50 mouse_area.jpg  
+
+Use Case: Document UI states or save screenshots from different screens for verification.
+
+
+##Variables
+Store and reuse values for dynamic scripting in session.
+Syntax:set {{variablename}} value: Set a variable (no spaces in name, no empty values).
+getValue {{variablename}}: Retrieve a variable’s value for use in conditions.
+resetEnvironment: Clear all variables and reset the environment.
+
+Example:
+
+set {{username}} JohnDoe
+keyBoard type 0.2 Welcome, {{username}}
+if getValue {{username}} ?equ JohnDoe ?run msg Hello, John!
+
+Note: The set command puts runs its commands in an isolated state stopping surtr from detecting variables
+this is required to stop surtr parsers from parsing variables before they are set.
+You can manually do this by adding >> before writing commands
+example:
+
+>> if msg set the variable ?run set {{myvar}}
+
+But when doing this know that variables will not be detected and therefore not parsed
+example:
+>> emit {{login}} ~~ will output {{login}} instead of the logged in username
+
+You can call variables by using the global super argument name "?var"
+
+>> emit ?var "{{login}}" ~~ will now output the logged in username
+
+Some commands like 'get' also use this isolated method
+ 
+Use Case: Store user inputs or system data for reuse across commands.
+
+##Variable Binding Modes
+
+{{var}} – Late Binding (Default, “Live” variables
+
+- Written as: `{{name}}`
+- Expanded **at execution time** — every single time the command runs.
+- Always reflects the **current, real-time value** of the variable.
+- This is the safe default inside `repeat`, `if`  etc.
+
+**Use this 99 % of the time.**
+
+
+set {{i}} 0
+repeat 5 <++
+  set {{i}} ?calc "{{i}} + 1"   ~~ i is live → becomes 1, 2, 3, 4, 5
+  emit {{i}}                    ~~~ prints 1 → 2 → 3 → 4 → 5
+++>
+
+emit You have {{apples}} apples   ~~ always shows the actual current number
+
+{$var} – Early Binding (“Snapshot” variables)
+
+Written as: {$name}
+Expanded once, the moment the block is closed (when the final ++> is received).
+
+The value is captured at that exact moment is frozen into the block forever.
+
+Perfect for loop counters, repeat counts, macro parameters, or any time you need the value “as it was when the block was defined”.
+
+Use this only when you deliberately want the value from definition time.
+
+set {{i}} 10
+repeat {$i} <++                  ~~ repeats exactly 10 times even if i changes later
+  emit {{i}}
+  set {{i}} ?calc "{{i}} - 1"
+++>
+→ prints 10 9 8 7 6 5 4 3 2 1
+
+
+
+<++
+  emit Hello {$name}!
+  emit Nice to see you again {$name}!
+++>
+
+greet Alice
+→ Hello Alice!
+  Nice to see you again Alice!
+Quick cheat-sheet
+
+Syntax | When expanded?           | Value you get        | Typical use-case
+{{x}}  | Every time the line runs | Current / live value | Almost everything
+{$x}   | Once, when block is finished | Value at the moment the block was closed | Loop counters, macro arguments, fixed limits
+
+One-line rule to remember
+
+“Do you want the value now or later?”
+Want it later (live) → {{var}}
+Want it now (and keep it forever) → {$var}
+
+Always use early bindings in the condition part of a logic command like if,while etc when using ++ or <++ in it
+
+
+##GUI Commands
+Display alerts and collect user input.
+AlertsSyntax:msg message: Display an alert.
+confirm message: Display a confirmation dialog (true for OK, false for Cancel).
+userInput message: Prompt for user input 
+set {{guititle}} text: Customize gui title window
+set {{okbutton}} text: Customize OK button text.
+set {{cancelbutton}} text: Customize Cancel button text.
+set {{guiboxposition}} bottomright: sets the alert box location at the bottom right of the screen
+set {{guiboxposition}} bottomleft: sets the alert box location at the bottom left of the screen (default)
+set {{guiboxposition}} topright: sets the alert box location at the top right of the screen
+set {{guiboxposition}} topleft: sets the alert box location at the top left of the screen
+set {{guiboxposition}} center: sets the alert box location at the center of the screen
+
+Example:
+
+set {{okbutton}} Yes
+set {{cancelbutton}} No
+if confirm Proceed with deletion? ?run deleteFile data.txt
+
+Inputs
+Syntax:userInput message: Display a text input dialog.
+
+Example:
+
+if userInput Enter your email ?cntn @gmail.com ?run msg Valid email! 
+
+Use Case: Collect user data for personalized automation tasks.
+
+Tip: Use > set {{guiboxposition}} x:y < for custom positions 
+
+##Reading Commands
+
+Read text from images or the screen using tesseract OCR.
+Syntax:readImage imagepath [useBlackWhite|useGray] language: Read text from an image (e.g., eng for English).
+readScreen language: Read text from the entire screen.
+readImageLanguages: List available OCR languages.
+
+Example:
+
+~~  Read English text from receipt.jpg
+readImage receipt.jpg useBlackWhite eng 
+
+~~  Read all text on the screen
+readScreen eng  
+
+Use Case: Extract text from scanned documents or application windows.
+
+NOTE: image reading commands depends on tesseract OCR to work surtr is already packaged with tesseract but 
+you can download and use your own version of tesseract if you like
+
+##Word Commands
+
+Interact with words on the screen using tesseract OCR.
+Syntax:moveToWord one|all speed language word: Move to the first (one) or all instances of a word.
+dragToWord one|all speed language word: Drag to a word.
+rightClickWord one language word, ClickWord, doubleClickWord, tripleClickWord: Click on a word.
+
+Example:
+~~  Move to the first “Save” word
+moveToWord one 5 eng Save  
+
+~~  Double-click all “Edit” words
+doubleClickWord all eng Edit  
+
+Use Case: Click a specific menu item in an application.
+
+NOTE: image reading commands depends on tesseract OCR to work surtr is already packaged with tesseract but 
+you can download and use your own version of tesseract if you like
+
+##Text commands
+
+Interact with texts on the screen using tesseract OCR.
+Syntax:moveToText one|all speed language word: Move to the first (one) or all instances of a word.
+dragToText one|all speed language word: Drag to a word.
+rightClickText one language word, ClickText, doubleClickText, tripleClickText: Click on a Text.
+
+~~  Move to the text "click this button"
+moveToText one 5 eng click this button 
+
+~~  Double-click all "click to open"
+doubleClickText all eng click to open
+
+Note: The move to text command  ot text commands can be tricky when finding a specific text in a 
+line of texts (the text is not single),when found it will not move to the center of the specified text but in the 
+center of the line if texts its located in 
+
+##Shell Commands
+
+
+Execute Windows Command Prompt (cmd) commands.
+Syntax:runCmd command: Run a shell command.
+
+Example:
+~~  List directory contents
+runCmd dir 
+
+Tip: add live:yes before command to see results immediately
+without waiting for command to complete first
+this method is not supported in (if) commands 
+Example:
+~~  List directory contents (results is displayed on screen immediately without waiting for command to end first)
+~~  Will not work if used in if command
+runCmd live:yes dir /s
+
+Use Case: Run batch operations like file renaming.
+
+##Repeat Command
+
+Run a command multiple times.
+Syntax:repeat count command: Execute the command the specified number of times.
+
+Example:
+~~  Display “Hello!” three times
+repeat 3 msg Hello!   
+
+Use Case: Perform repetitive clicks or notifications.
+
+##Math implementation
+surtr can perform calculations using a super argument called "?calc"
+this argument can perform calculation and replace results and can be used in any position of
+every surtr command. 
+
+Perform calculations within commands.
+Syntax:?calc "expression": Evaluate a mathematical expression (e.g., 10 + 5, 1920 / 2).
+
+Example:
+
+~~  Move to screen center (x=960)
+move ?calc "1920 / 2" 500 5  
+
+Use Case: Calculate dynamic coordinates based on screen size.
+
+
+##Screen Size and Mouse Position
+
+
+Retrieve screen dimensions and mouse coordinates.
+Syntax:screenWidth: Get screen width (stored as {{screenwidth}}).
+screenHeight: Get screen height (stored as {{screenheight}}).
+mousePositionX, mousePositionY, mousePosition: Get mouse coordinates.
+
+Example:
+~~  Move to bottom-right corner
+move {{screenwidth}} {{screenheight}} 5  
+
+Use Case: Adapt scripts to different screen resolutions.
+
+
+##integer
+Converts command output to integer.  
+Syntax:integer command 
+Examples:  
+integer userInput type a float  ~~ Convert to integer
+
+Use Case: Type conversion.
+
+
+## Text Manipulation Commands
+
+--textLower
+Convert text to lower case. 
+syntax: textLower text
+Examples:  
+textLower WRITTEN IN LOWER CASE  ~~ Change to lower case
+
+Use Case: Case normalization.
+
+--textUpper
+Convert text to upper case.
+syntax: textUpper text
+Examples:  
+textUpper written in uppercase  ~~ Change to upper case
+
+Use Case: Case normalization.
+
+--toBase64
+Convert text to base64 format.
+syntax: toBase64  text
+Examples:  
+toBase64 encode this to base64 format ~~ Change to base64
+
+Use Case: Encode data.
+
+--decodeBase64
+Decode Base64 text.
+syntax: decodeBase64  base64 text  
+Examples:  
+decodeBase64 base64 text ~~ decode base64
+
+Use Case: Decode data.
+
+--textStartWith
+Check if a text starts with a specific text. 
+syntax: textStartWith "text" fulltext
+Examples:  textStartWith "this" this is my world  ~~ Check if text starts with this
+
+Use Case: String checking.
+
+--textEndWith
+Check if a text ends with a specific text. 
+syntax: textEndWith "text" fulltext 
+Examples:  textEndWith "world" this is my world  ~~ Check if text ends with world
+
+Use Case: String checking.
+
+--textHas
+Check if a text has a specific text.
+syntax: textHas "text" fulltext   
+Examples:  textHas "welcome" hello welcome everybody ~~ Check if welcome is in text
+
+Use Case: String contains check.
+
+--empty
+Check if a text or variable is empty.
+syntax: empty {{variablename}}   
+Examples:  if empty {{variablename}} ?run msg this is empty ~~ Check if text is empty
+
+--strip
+Remove specific characters from a text
+syntax: strip <char> <text>
+Examples: strip "some" "let's write some script" ! Remove 'some' from text
+
+
+##JSON Commands
+Handle JSON data storage, retrieval, and modification.
+
+json
+
+Handles JSON data storage, retrieval, and modification of stored json. 
+Supports nested paths with .[key] for dict keys (strings in brackets) and .0 for list indices (bare numbers). Values auto-type: JSON parses 
+to dict/list/etc. Supports simple strings/numbers/bools/null.  Examples:  json test {"a": "b", "list": [1, 2]}  ! Create/update 'test' with dict
+containing key and list  
+json test  ~~ Retrieve and print entire 'test'  
+json test.[a]  ~~ Retrieve value at 'test["a"]' (returns "b")  
+json test.[list].0 42  ~~ Set index 0 of list to int 42 (list becomes [42, 2])  
+json test.[newkey] hi  ~~ Set/add dict key "newkey" to string "hi"  
+json test.[list].1 hello world  ~~ Set index 1 to string "hello world" (multi-word joined)  
+json test true  ~~ Set to bool True  
+json test.[key] null  ~~ Set to None
+
+Use Case: Store and manipulate structured data.
+
+lenJson
+
+Retrieves and prints the length of a stored JSON value or nested path.  
+Examples:  
+lenJson test  ~~ Print length of entire 'test' (e.g., 2 for {"a": "b", "list": [1, 2]})  
+lenJson test.[list]  ~~ Print length of array at 'test["list"]' (returns 2 for [1, 2])  
+lenJson test.[a]  ~~ Print length of string at 'test["a"]' (returns 1 for "b")  
+lenJson test.[list].0  ~~ Print length of value at index 0 of list (e.g., 1 if it's a string, or error if number)
+
+Use Case: Get sizes of JSON structures.
+
+jsonSave
+
+Saves a specific JSON from stored json to a file. Overwrites if exists. Optional indentation. 
+ 
+Examples:  
+jsonSave test output.json  ~~ Save 'test' to output.json (compact)  
+jsonSave test pretty.json 2  ~~ Save with 2-space indent  
+jsonSave missing save.json  ~~ Error: no json named 'missing'
+
+Use Case: Export JSON data.
+
+jsonAppend
+
+Appends json to a stored json (List or Dict).
+
+Examples:
+jsonAppend test [5, 6, 7, 8] ! Append list to json 'test' (if 'test' is a list)
+jsonAppend test.[mydict] {"name":"john"} ! Append dict to 'test["mydict"]' (if it's a dict)
+jsonAppend test 3 ! ! Append '3' to json 'test' (if 'test' is a list)
+jsonAppend test {"fish":"swim"} ! Append dict to json 'test' (if 'test' is a dict)
+
+
+jsonParse
+
+Parses provided JSON text and returns output. Does NOT store outputs. Strict JSON only.  
+Examples:  
+jsonParse {"key": "value", "arr": [1, 2]}  ~~ Parse and returns the output  
+
+Use Case: Parse JSON strings.
+
+jsonDelete
+
+Deletes a JSON entry or nested value. 
+Examples:  
+jsonDelete test  ~~ Delete entire 'test' from jsonvariants  
+jsonDelete test.[a]  ~~ Delete key "a" from 'test' dict  
+jsonDelete test.[list].0  ~~ Delete index 0 from 'test["list"]'  
+jsonDelete missing.[key]  ~~ Error: no json named 'missing' or path not found
+
+Use Case: Remove JSON data.
+
+
+##fileman Command
+
+Manage files and folders.
+Syntax:fileman fileExist filename: Check if a file exists (True/False).
+
+fileman readFile filename: Read file contents.
+fileman writeFile filename content: Write to a file.
+fileman appendFile filename content: Append to a file.
+fileman deleteFile filename: Delete a file or folder.
+fileman deleteFile filename -noerror: Delete a file or folder does no stop on error.
+fileman startFile filename arguments: starts a file or open a directory
+fileman isFile filename check if path is a file
+fileman isFolder filename or fileman isDir filename :  check is path is a directory.
+fileman listContent filename: show content of a folder.
+fileman getType filename: show file format.
+fileman getSize filename: show the size of a file or folder.
+fileman newFolder foldername or fileman newDir foldername: creates a new folder does nothing if folder exists
+fileman absolutePath file|folder: show an absolute path of the file or folder 
+Example:
+
+if fileman fileExist data.txt ?run readFile data.txt ?else msg File not found
+
+Use Case: Automate log file creation or cleanup.
+
+
+##Window Commands
+
+Manage application windows.
+Syntax:windowList: List all open windows.
+focusWindow name: Set focus to a window.
+focusedWindow: Get the current focused window.
+minimizeWindow name, maximizeWindow name, closeWindow name: Manage window state.
+resetWindow name x y width height: Resize and reposition a window.
+inWindowTitle word: Find a window containing the specified word.
+getWindowX, getWindowY, getWindowWidth, getWindowHeight: Get window properties.
+
+Example:
+
+~~ building a custom window screenshot script
+
+~~ look for the window title that contains chrome
+get {{titlewindow}} inWindowTitle Chrome
+
+~~ checks if there is a title found
+if not getValue titlewindow ?cntn no title ?run focusWindow {{titlewindow}} ?else run error:
+
+~~ get the position
+get {{x}} getWindowX {{titlewindow}}
+get {{y}} getWindowY {{titlewindow}}
+get {{width}} getWindowWidth {{titlewindow}}
+get {{height}} getWindowHeight {{titlewindow}}
+
+~~ perform a screen shot and save
+screenShot {{x}} {{y}} {{width}} {{height}} sshot.jpg
+
+
+msg window screen shot completed
+
+~~ close the script
+end
+
+error:
+msg No window found
+end
+
+
+Use Case: Capture a screenshot of a specific application window.
+
+
+##Clipboard Commands
+
+Manage clipboard content.
+Syntax:clipboardCopy text: Copy text to the clipboard (stored as {{clipboard}}).
+clipboardPaste: Paste clipboard content.
+
+Example:
+
+clipboardCopy {{username}}
+~~  Paste the username
+keyBoard press ctrl v  
+
+Use Case: Copy and paste data between applications.
+
+##Watchdog Commands
+
+Monitor file and folder changes.
+Syntax:watchFile filename: Monitor a file.
+watchFolder foldername: Monitor a folder.
+watchStatus [filename]: Show changes for all or a specific file/folder.
+stopWatching filename: Stop monitoring.
+changeDetected [filename]: Get the number of changes detected.
+filesWatched: List monitored files/folders.
+restoreFile filename: Restore a file to its initial state (when monitoring began).
+
+Example:
+
+watchFolder Documents
+
+wait 5
+
+checker:
+if changeDetected Documents ?grtn 0 ?run msg Changes detected!  ?else run lopper:
+
+
+looper:
+wait 5
+run checker:
+
+
+Use Case: Monitor a folder for new files and trigger notifications.
+
+
+##Timer Commands
+Track elapsed time in the background.
+Syntax:timerStart: Start a timer.
+timerStop: Stop the timer.
+timer: Get elapsed time (in seconds).
+
+Example:
+
+timerStart
+wait 10
+~~  Display elapsed time (approx. 10 seconds)
+timer
+
+Use Case: Measure the duration of an automation task.
+
+
+##Pixel Commands
+
+Work with screen or image pixels.
+Syntax:pixelColor x y hex:no|yes: Get pixel color at (x, y) in RGB or hex format.
+waitPixelColor x y hex timeout: Wait for a pixel color to appear.
+getPixelColorRegion x y width height: Get all pixel colors in a region.
+colorExistsInRegion x y width height hex1 [hex2 ...] | file: Check if colors exist in a region.
+colorExistsInRegionSimilar x y width height tolerance hex1 [hex2 ...] | file: Check for similar colors.
+colorExistsInImage image hex1 [hex2 ...] | file: Check colors in an image.
+colorExistsInImageSimilar image tolerance hex1 [hex2 ...] | file: Check for similar colors in an image.
+toPixel image: Get raw pixel data in RGB.
+toHex image: Get raw pixel data in hex.
+
+Example:
+~~  Wait 10s for a red pixel
+waitPixelColor 100 100 #FF0000 10  
+
+~~  Check colors from a file
+colorExistsInRegion 100 100 200 200 hexes.txt  
+
+inside hexes.txt
+
+#1F1F1F,#142C3B,#181818,#f6f6f6,#717171,#111111,#717171,#f6f6f6,
+#ffffff,#d9d9d9,#3b3b3b,
+#bebebe,#dadada,#3c3c3c,
+#c7c7c7,#959595,
+#3c3c3c,#dadada,#e2e2e2,#474747,#8a8a8a,
+#ff00dd
+
+
+Use Case: Detect UI changes (e.g., a button turning red) to trigger actions.
+WARNING: these data might be too long and take time to process based on the image size
+only use this on smaller images
+
+##System Commands
+Retrieve system information.
+Syntax:getEnv os: Get OS name and version.
+getEnv user: Get current username.
+getEnv cpuUsage: Get CPU usage percentage.
+getEnv ramFree, getEnv ramTotal: Get available and total RAM.
+getEnv diskFree drive, getEnv diskTotal drive: Get disk space (e.g., c:).
+getEnv hostname: Get system hostname.
+
+Example:
+
+if getEnv ramFree ?lstn 1000 ?run msg Low memory warning! 
+
+Use Case: Monitor system resources and alert on low memory.
+
+##Custom Commands
+
+Register user-defined commands.
+
+Syntax:registerCommand name run script: Register a command that runs a script or label.
+removeCommand name: Remove a custom command.
+registeredCommand: shows all registered commands
+Constraints: Command names must be letters only (no numbers or symbols) and contain no spaces.
+
+Example:
+
+registerCommand greet run welcome.as greet:
+
+
+greet  > Runs welcome.as greet: label
+
+When a registered command is called with parameters e.g  greet parameter0 parameter1 surtr automatically registers those 
+parameters as ?param0 for first parameters ?param1 for second....  and ?param* for all parameters
+and can be used in called script
+
+welcome.as
+
+greet:
+emit ?param0 ?param*
+end:
+
+Use Case: Create shortcuts for frequently used tasks.
+
+##Error Handling
+Manage errors to ensure robust scripts.
+Syntax:set {{onerror}} nostop|labelname:: Continue script execution on errors or run a label on error.
+set {{logerror}} file.log: Log errors to a file.
+set {{showerror}} hide|full: Suppress error dialogs or show full error details.
+Variables: {{errornumber}} (error code), {{errortext}} (error message),{{errorsource}} (command that cause the error).
+
+Some error codes:
+100: General error (mostly used by commands)
+102: Incomplete arguments
+103: Variable not found
+200: File not found
+300: System error
+500: Log error
+
+
+Example:
+
+set {{onerror}} nostop
+if getValue {{errornumber}} ?equ 200 ?run msg File not found: {{errortext}}
+
+Use Case: Log errors during file operations without stopping the script.
+
+##The Get Command
+Store command results as variables.
+Syntax:get {{variablename}} command: Run a command and store its result.
+
+Example:
+
+get {{inputs}} userInput Enter your name
+msg Hello, {{inputs}} ! 
+
+Use Case: Capture user input for later use in the script.
+
+Example Workflow: Automating Web Form Submission
+
+~~  Reset environment for a clean start
+resetEnvironment
+
+~~  Navigate to browser and open a website
+focusWindow Chrome
+keyBoard type 0.2 https://example.com/login
+keyBoard press enter
+wait 5
+
+~~  Check for login button
+if seeImage login.png ?run click ?else msg Login button not found
+
+~~  Enter credentials
+keyBoard type 0.3 {{login}}
+keyBoard press tab
+keyBoard type 0.3 mypassword
+keyBoard press enter
+
+~~  Confirm successful login
+if seeImage dashboard.png ?run msg Login successful!  ?else msg Login failed
+
+This script automates logging into a website, demonstrating mouse, keyboard, image recognition, and GUI commands.Debugging
+Tip: Use msg: Display variable values or script progress (e.g., msg Current X: {{imageX}}).
+Log Errors: Set {{logerror}} file.log to capture errors for analysis.
+Test Incrementally: Run small script sections to isolate issues.
+
+
+##random 
+generate random texts or numbers
+
+syntax:
+random  > generate random numbers length 0 to 9
+random len:n  > generate random numbers length 0 to n
+random "text" > generate random text from text
+
+random len:n "text"  > generate random text from text length n
+    
+random len:n text0 text1 text2...  > generate random texts from texts length n
+random text0 text1 text2... > generate random text from texts
+
+#recorder
+
+Records user keyboard,mouse actions and convert them to surtr .as script format 
+
+syntax:
+startRecorder : starts recording
+startRecorder filename.as : save recordings to file
+startRecorder filename.as 60 : save recordings to file automatic stop after 60 seconds
+stopRecorder : stops recording
+
+
+#replace
+replace a specific text with another text
+syntax:
+replace boat car "i have a boat" : replaces boat with car
+
+
+##The variable holder command
+
+you can hold the value of a variable by passing it as an argument using the getValue command
+
+Example getValue time (do not include the double brackets {{ }} )
+
+this is needed when checking a variable in if command because (if) command runs command and 
+holds the result because of this it cannot directly run variables that holds value instead of 
+command so with this you can do
+\
+get {{mousex}} mousePositionX
+
+~~  LATER ON YOU CAN PARSE THE VARIABLE WITHOUT RUNNING mousePositionX AGAIN
+
+if not getValue mousex ?grtn 200 ?run msg your last mouse x position was not greater than 200
+
+
+
+
+
+##stop or stopScript command 
+
+stops running script without exiting surtr
+it works same as end but do not exit surtr 
+
+Syntax:end :stops script and exit surtr
+stop or stopScript:stops running script only, does not close surtr
+
+##exit
+
+stops current running labels without stopping script
+does nothing when running on shell or running a script
+only used in label to break out of labels
+Syntax exit:stops the current running label
+
+
+Syntax:end :stops script and exit surtr
+stop or stopScript:stops running script only, does not close surtr
+
+##Security and password protection
+
+provides security features for securing scripts and preventing random users from running scripts on your system
+Syntax:
+setSecurityPassword <password> : this sets a password for surtr preventing users from tamperimg with commands
+activateSecurity : now this is what activates security mode on surtr 
+You have to set a security password for this to work
+
+deactivateSecurity : deactivate security mode
+
+guestUser on/off  : tell surtr to allow guestmode (works when a password is set and security is active) 
+by default surtr prompts for password on start if security is activated guest mode allows low risk and 
+simple commands to run without requesting a password
+
+
+
+##loop on texts
+
+allow users run commands on each text found on screen 
+syntax: textOnScreen language text command
+saves details of text iv variables:
+{{textx}} : x location of the text
+{{texty}} : y location of the text
+{{textwidth}} : width of the text
+{{textheight}} : height of the text
+{{textcenterx}} : x center location of the text
+{{textcentery}} : y center location of the text
+
+example:
+~~ highlight all "move" texts on screen
+textOnScreen eng move run highlighter: ?arg {{textx}} {{texty}}  {{textwidth}} {{textheight}}
+
+~~ close script when all highlighting is done
+stopScript
+
+highlighter:
+~~ define our variables
+set {{xtxt}} ?arg0 
+set {{ytxt}} ?arg1
+set {{wdthtxt}} ?arg2
+set {{hgthtxt}} ?arg3
+
+~~ calculate the position and width of the text  
+set {{toprightx}} ?calc "{{xtxt}} + {{wdthtxt}}"
+
+~~ move to text
+move {{xtxt}} {{ytxt}} 2
+
+~~ highlight
+drag {{toprightx}} {{ytxt}} 2
+
+~~ optional just click to unhighlight (clear highlight)
+click
+
+Usage: perform workflows on text,text detection
+
+
+##text split and run
+
+splits and run commands based on each splitted texts
+use ?run to give command to run
+saves each piece of the text in {{item}} before running
+
+Syntax: splitRun <text> ?run <command>
+
+Example:
+~~ splits and run the text word by word
+splitRun this is surtr 4 ?run msg {{item}}
+~~ you can give a text file to split the file line by line instead
+
+splitRun splitfile.txt ?run msg {{item}}
+
+use ?token at the begining to split the word by a given word or character or
+?token-es "<escape character>" to split using escape character instead
+
+Example:
+~~ splits the text in every "B" found in text and run the command
+
+splitRun ?token "B" this is surtr 4 ?run msg {{item}}
+
+
+Usage: bruteforce,validation
+
+
+##emit command
+
+Advanced shell display. Prints text to the shell with optional semantic color modes and inline color markers.
+
+Syntax
+
+emit <text...>
+emit:<mode> <text...>        # modes: info, warn, error, or a color name
+emit color <color> <text...> # alternate form for custom color
+
+
+?em super argument 
+the ?em argument functions as an Inline color markers
+
+?em-<fg> — set foreground (e.g. ?em-red)
+
+?em-<fg>-<bg> — set foreground and background (e.g. ?em-green-blue)
+the ?em args affect subsequent tokens until changed.
+
+Shorthand / examples
+
+emit Hello world
+emit:info Hello from emit        # light-blue by default
+emit:warn ?em-yellow Low battery  # warn + inline yellow marker
+emit:error Something failed!     # prints red
+emit color magenta Custom text    # custom color start
+emit:magenta This is all magenta  # treat suffix as color
+emiit:prompt This will displays on shell and wait to get user input
+
+
+
+##Help Commands
+define
+Display the functions of surtr commands with examples.  
+Examples:  
+define ~~ display surtr commands and examples.  
+define if ~~ display the if command function with examples.
+
+Use Case: Get command help.
+
+def
+Display the functions of surtr commands with examples (alias for define).  
+Examples:  
+def ~~ display surtr commands and examples.  
+def if ~~ display the if command function with examples.
+
+Use Case: Get command help.
+
+
+##prompt
+prompt for user input in shell
+
+syntax prompt press enter to comtinue
+
+
+##fetcher
+===============================================================================
+                                 FETCHER
+===============================================================================
+Surtr Universal Web Extraction & Download Utility
+Version: 4.0
+Type: CLI Application
+Modes: Interactive | Command | JSON-driven
+-------------------------------------------------------------------------------
+
+OVERVIEW
+--------
+Fetcher is a smart command-line tool for extracting, parsing, and downloading
+web content. It supports full-page text retrieval, structured JSON APIs, HTML
+selectors, and segmented (multi-threaded) file downloads.
+
+Fetcher can work in two primary modes:
+  • One-line command input
+  • Advanced JSON task file input
+
+Running "fetcher" without arguments launches interactive mode for beginners.
+
+-------------------------------------------------------------------------------
+
+BASIC SYNTAX
+------------
+  fetcher [options]
+
+Examples:
+  fetcher -fetch ["url=https://example.com;parser=bs4;select=h1"]
+  fetcher -fetch-json tasks.json
+  fetcher -fetch-download -url https://example.com/file.zip -saveto file.zip  ! Simple download
+  fetcher -fetch-download -url https://example.com/file.zip   ! Download and save to the downloads folder with original filename sent from the server
+  fetcher -fetch-download -url https://example.com/bigfile.iso -saveto C:\mypath ! Custom save path
+-------------------------------------------------------------------------------
+
+COMMAND CATEGORIES
+------------------
+
+1. FETCH COMMANDS
+-----------------
+Used for web page and API extraction.
+
+  -fetch [jsonlist]          Inline JSON array or shorthand items.
+  -fetch-json <file>         Load fetch tasks from JSON file.
+  -save <file>               Save fetched plain text to file.
+  -save-json <file>          Save fetched structured data to JSON.
+  -show-aggregated           Show aggregated summary when all requests finish.
+
+
+2. DOWNLOAD COMMANDS
+--------------------
+Used for file, audio, or video downloads.
+
+  -fetch-download            Perform direct download from arguments.
+  -fetch-download-json <file> Use JSON configuration for downloads.
+  -url <string>              Single URL for direct download mode.
+  -saveto <string>           Save output file as given name.
+  -split-download <num>      Enable segmented download with N parts.
+  -chunk-size <num>          Per-read chunk size in bytes.
+  -timeout <num>             Timeout per connection (seconds).
+  -retries <num>             Number of retry attempts on failure.
+  -show-progress yes|no      Show live progress bar during download.
+
+-------------------------------------------------------------------------------
+
+ADVANCED OPTIONS (COMMON)
+-------------------------
+ For both fetch and download modes.
+
+  -method <get|post|put|delete>  Override HTTP method.
+  -headers <dict>                Custom headers (JSON-like dict).
+  -proxies <dict>                Proxy configuration.
+  -rotate-user-agents yes|no     Enable random User-Agent rotation.
+  -max-worker <num>              Number of concurrent requests.
+  -request-delays <float>        Delay between requests (seconds).
+  -request-schedule [floats]     Custom schedule list, e.g. [0.0,5.0,10.0].
+  -timeout <float>               Timeout per request.
+  -backoff-factor <float>        Backoff multiplier for retry delays.
+  -retries <int>                 Maximum retry attempts.
+  -text-separator <string>       Separator between multiple text outputs (default: "\n\n-----\n\n").
+  -result-separator <string>     Separator between full results (default: "\n\n######\n\n").
+  -getdata                       Stream result to surtr (-fetch only)
+  Supported parsers: json, bs4, text,sbs4.
+
+Note:
+- The 'bs4' parser can accept raw html text syntax or a local html file path in the url field.
+- The 'json' parser extracts JSON data from API responses.
+- The 'text' parser returns full raw text content.
+- The 'sbs4' stands for "strict bs4" and only accept http or https URLs.
+
+
+  
+
+-------------------------------------------------------------------------------
+
+JSON TASK FORMATS
+-----------------
+
+1) VERY SIMPLE — URLS ONLY
+--------------------------
+[
+  "https://example.com",
+  "https://httpbin.org/html"
+]
+→ Each item is a plain URL; returns full page text.
+
+
+2) COMPACT STRING ITEMS
+-----------------------
+[
+  "url=https://example.com;parser=bs4;select=h1",
+  "url=https://httpbin.org/json;parser=json"
+]
+→ Shorthand per-request syntax parsed by Fetcher.
+
+
+3) EXPLICIT REQUEST OBJECTS
+---------------------------
+[
+  {
+    "url": "https://example.com",
+    "parser": "bs4",
+    "select": "h1"
+  },
+  {
+    "url": "https://httpbin.org/json",
+    "parser": "json"
+  }
+]
+
+
+4) REQUESTS WITH HEADERS, QUERIES, AND BODY
+-------------------------------------------
+[
+  {
+    "url": "https://api.example.com/search",
+    "method": "GET",
+    "parser": "json",
+    "headers": {"Authorization": "Bearer TOKEN"},
+    "queries": {"q": "john", "limit": "5"}
+  },
+  {
+    "url": "https://api.example.com/submit",
+    "method": "POST",
+    "parser": "json",
+    "headers": {"Authorization": "Bearer TOKEN"},
+    "body": {"name": "alice", "score": 42}
+  }
+]
+
+
+5) SAVE / SCHEDULING / RETRIES / TIMEOUT
+----------------------------------------
+[
+  {
+    "url": "https://example.com",
+    "parser": "bs4",
+    "select": "div.article",
+    "save": "article.html",
+    "timeout": 15,
+    "retries": 3,
+    "delay": 2.5
+  }
+]
+
+-------------------------------------------------------------------------------
+
+DOWNLOAD TASK FORMATS
+---------------------
+
+6) SIMPLE FILE DOWNLOAD
+-----------------------
+[
+  {
+    "url": "https://example.com/bigfile.zip",
+    "save_as": "bigfile.zip"
+  }
+]
+
+
+7) SEGMENTED DOWNLOAD (IDM-LIKE)
+--------------------------------
+[
+  {
+    "url": "https://example.com/bigfile.iso",
+    "save_as": "bigfile.iso",
+    "download_parts": 8,
+    "timeout": 30,
+    "retries": 3
+  }
+]
+* Server must support Accept-Ranges.
+
+
+8) ADVANCED DOWNLOAD CONFIGURATION
+----------------------------------
+[
+  {
+    "url": "https://example.com/large.mp4",
+    "save_as": "video.mp4",
+    "download_parts": 6,
+    "chunk_size": 8192,
+    "retries": 2,
+    "timeout": 30,
+    "show_progress": true,
+    "proxies": {"http": "http://p1:port", "https": "http://p1:port"}
+  }
+]
+
+-------------------------------------------------------------------------------
+
+EXAMPLES
+--------
+
+1. Fetch and print all page titles:
+   fetcher -fetch ["url=https://example.com;parser=bs4;select=title"]
+
+2. Fetch JSON APIs and save results:
+   fetcher -fetch-json apitasks.json -save-json results.json
+
+3. Segmented file download:
+   fetcher -fetch-download -url https://example.com/file.iso \
+           -saveto file.iso -split-download 6 -show-progress yes
+
+4. Proxy, retries, and aggregation:
+   fetcher -fetch ["https://example.com","https://httpbin.org/json"] \
+           -proxies '{"https\":"http://127.0.0.1:8080"}' \
+           -retries 3 -show-aggregated
+
+-------------------------------------------------------------------------------
+
+INTERACTIVE MODE
+----------------
+Running "fetcher" with no arguments enters guided mode.
+
+Example:
+
+|=[>>> fetcher
+fetcher — interactive starter
+Type 'exit' at any prompt to quit.
+
+Enter input mode:
+(1) Paste list,
+(2) Path to JSON file
+(3) Download file
+(4) Download using json
+  ...
+
+-------------------------------------------------------------------------------
+
+NOTES
+-----
+- Supported parsers: json, bs4, text
+- Aggregated results can be shown or saved after all requests.
+- Retry & backoff system handles unstable connections gracefully.
+- Parallelism via -max-worker boosts performance on large jobs.
+
+-------------------------------------------------------------------------------
+
+TIP
+---
+For large operations:
+  fetcher -fetch-json tasks.json -max-worker 5 \
+          -rotate-user-agents yes -show-aggregated
+
+===============================================================================
+
+
+
+##imageReader
+===============================================================================
+                         IMAGEREADER
+===============================================================================
+IMAGEREADER
+
+Optical Character Recognition (OCR) Engine for Text Extraction from Images
+-------------------------------------------------------------------------------
+
+OVERVIEW
+--------
+imageReader is Surtr's built-in OCR command that extracts and reconstructs readable text from images, 
+photos, screenshots, scanned documents, receipts, invoices, forms, and more.
+
+It uses advanced layout analysis and supports multiple languages, confidence thresholds, 
+page segmentation modes (PSM), character/line spacing tuning, image preprocessing, 
+and silent processing — making it ideal for automation workflows involving visual text.
+
+-------------------------------------------------------------------------------
+
+KEY FEATURES
+------------
+
+1. HIGH-ACCURACY OCR
+   ------------------
+   • Extracts printed and typewritten text with high precision
+   • Supports multiple languages via -lang parameter
+   • Adjustable minimum confidence (-min-conf) to filter low-quality results
+
+2. LAYOUT RECONSTRUCTION
+   ----------------------
+   • Fine-tune character width and line height for better formatting
+   • Page segmentation modes (PSM) for different document types (single block, column, sparse text, etc.)
+
+3. IMAGE PREPROCESSING
+   ---------------------
+   • Convert to grayscale (-transform gray) or black & white (-transform bw)
+   • Improves OCR accuracy on low-contrast, noisy, or colored backgrounds
+
+4. OUTPUT CONTROL
+   ----------------
+   • Print results to console (default)
+   • Save extracted text to file (-save)
+   • Silent mode (-hide-output) for background automation
+
+-------------------------------------------------------------------------------
+
+USAGE
+-----
+
+Basic syntax:
+  imageReader -image <path> [options]
+
+Required parameter:
+  -image <path>          Path to the image file (png, jpg, bmp, tiff, etc.)
+
+Common options:
+  -lang <code>           Language code (eng, fra, deu, spa, chi_sim, etc.)
+  -min-conf <0–100>      Minimum confidence threshold (default: ~30)
+  -psm <0–13>            Tesseract PSM mode (default: 3 – fully automatic)
+  -char-width <pixels>   Expected average character width
+  -line-height <pixels>  Expected average line height
+  -transform <gray|bw>   Preprocess image (grayscale or black & white)
+  -save <path.txt>       Save extracted text to file
+  -hide-output           Process silently (no console output)
+
+-------------------------------------------------------------------------------
+
+EXAMPLES
+--------
+
+- Basic extraction:
+  imageReader -image sample.png
+
+- Receipt with English and minimum confidence:
+  imageReader -image receipt.png -lang eng -min-conf 40
+
+- Invoice with layout tuning:
+  imageReader -image invoice.png -char-width 8 -line-height 20
+
+- Structured document (single uniform block):
+  imageReader -image form.png -psm 6
+
+- Preprocess low-contrast scan:
+  imageReader -image scan.png -transform gray
+
+- Save output to file:
+  imageReader -image receipt.png -psm 6 -char-width 8 -line-height 20 -save output.txt
+
+- Silent background processing:
+  imageReader -image receipt.png -hide-output
+
+-------------------------------------------------------------------------------
+
+NOTES & REMINDERS
+-----------------
+• Supported image formats: PNG, JPG/JPEG, BMP, TIFF, GIF (most common ones)
+• Best results with clean, high-contrast images (300+ DPI recommended)
+• PSM modes (most useful):
+  - 3: Fully automatic (default)
+  - 6: Assume a single uniform block of text
+  - 7: Treat the image as a single text line
+  - 11: Sparse text – find as much text as possible
+• Use -transform gray or bw for faded or colored documents
+• Confidence filter (-min-conf) helps eliminate garbage characters
+• Output is plain text — layout is approximated, not pixel-perfect
+• For batch processing, combine with loops or Task Bot
+
+-------------------------------------------------------------------------------
+
+SUMMARY
+--------
+imageReader turns any image containing text into usable, machine-readable data in seconds.
+With flexible language support, layout tuning, preprocessing, and silent mode, it’s perfect 
+for receipt scanning, invoice automation, form filling, license plate reading, or any 
+visual-to-text workflow in your Surtr scripts.
+
+===============================================================================
+
+IMAGEREADER QUICK REFERENCE
+---------------------------
+Basic:               imageReader -image <path>
+Language:            -lang eng|fra|deu|...
+Confidence:          -min-conf 40
+Layout:              -psm 6 -char-width 8 -line-height 20
+Preprocess:          -transform gray|bw
+Save:                -save output.txt
+Silent:              -hide-output
+
+===============================================================================
+
+
+--------------------------------------------------------------------------------------------------
+
+
+===============================================================================
+                         SURTR 4 PROFESSIONAL — UI and WEBUI 
+===============================================================================
+SURTR WEBUI
+
+Web Interface Automation System for Advanced Users and Enterprises
+-------------------------------------------------------------------------------
+
+OVERVIEW
+--------
+Surtr Professional introduces a new dimension of control with its powerful
+WebUI feature — a web-based interface designed for remote automation, desktop
+viewing, and live script building directly from your browser.
+
+The Surtr WebUI works alongside the surtr automation engine, allowing
+you to run, monitor, and manage surtr commands faster and more efficiently
+than ever before.
+
+-------------------------------------------------------------------------------
+
+KEY FEATURES
+------------
+
+1. DESKTOP VIEW
+   -------------
+   • Access a live, real-time view of your desktop directly from your browser.
+   • Execute automation tasks visually and watch surtr perform them live.
+   • Toggle desktop streaming ON/OFF anytime using the WebUI tray icon.
+
+2. FILE BROWSER TAB
+   -----------------
+   • Browse your system files remotely through an intuitive interface.
+   • Download or inspect files securely from your connected system.
+   • Full access control available for host-admins.
+
+3. TERMINAL TAB
+   -------------
+   • Execute one-line surtr commands instantly from your web browser.
+   • Ideal for remote command execution and quick testing.
+   • Supports all surtr core command syntax and custom automation logic.
+
+4. SCRIPT BUILDER TAB
+   -------------------
+   • Build surtr automation scripts visually — faster and smarter.
+   • Add, arrange, and configure automation commands using dedicated buttons.
+   • Perfect for users who prefer GUI-based script construction over manual typing.
+
+-------------------------------------------------------------------------------
+
+WEBUI CONFIGURATION
+-------------------
+The WebUIConfig application provides full customization for your WebUI before
+launching. This configuration tool ensures every professional setup fits your
+workflow and system requirements.
+
+FEATURES INCLUDE:
+  • Change WebUI username and password.
+  • Enable or disable live desktop streaming.
+  • Toggle cursor visibility in live desktop view.
+  • Set frame resolution and streaming quality.
+  • Disable or enable audio streaming.
+  • Choose your preferred audio loopback device.
+  • Configure advanced security, permissions, and user settings.
+  • Save and apply configurations instantly before WebUI startup.
+
+Launch the configuration tool by opening:
+  webuiconfig.exe  (found in your surtr Pro directory)
+
+-------------------------------------------------------------------------------
+
+USAGE
+-----
+
+STEP 1 — VERIFY VERSION
+-----------------------
+Navigate to your surtr installation directory.
+
+If you see **webui4.exe**, you are using the **Professional version** of
+surtr with WebUI support.
+
+If **webui4.exe** is missing, you are using the **Free version**, which does not
+include WebUI access.
+
+---
+
+STEP 2 — LAUNCH WEBUI
+---------------------
+Make sure surtr is added to system path
+To Start the WebUI directly: i, open a cmd window ii, type webuilauncher
+  
+
+By default, the WebUI will launch with:
+  Host: 127.0.0.1
+  Port: 4444
+
+Then, open your browser and visit:
+  http://127.0.0.1:4444
+
+Default credentials:
+  Username: admin
+  Password: admin
+
+---
+
+STEP 3 — ADVANCED LAUNCH MODES
+------------------------------
+For advanced control, launch WebUI manually from the command line:
+
+  webuilauncher start webui <host> <port>
+
+Example:
+  webuilauncher start webui 192.168.1.10 8080
+
+To limit concurrent logins (max users):
+  webuilauncher start webui <host> <port> <maxuser:n>
+
+Example:
+  webuilauncher start webui 127.0.0.1 4444 maxuser:3
+
+Save logs for debugging purpose
+Example:
+ webuilauncher start webui 127.0.0.1 4444 maxuser:3 -savelogs uilogs.log
+
+---
+
+STEP 4 — CONFIGURE SECURITY & PERMISSIONS
+-----------------------------------------
+Use **webuiconfig.exe** to adjust:
+  - Security settings
+  - Access control
+  - Interface behavior
+  - Stream quality and performance
+
+Changes take effect the next time WebUI is launched.
+
+-------------------------------------------------------------------------------
+
+SESSION MANAGEMENT
+------------------
+• On every new user login, a **new surtr session** is automatically created.  
+  (Session creation may take a few seconds.)
+
+• Each session is fully isolated — users can run commands independently without
+  interfering with others.
+
+• Hosts can:
+  - Monitor active and disconnected users.
+  - Track real-time activities and automation progress.
+  - View detailed logs and diagnostics in the WebUI CLI status dashboard.
+
+-------------------------------------------------------------------------------
+
+MONITORING & LOGGING
+--------------------
+The host can monitor all user sessions from the **UI Log Panel**, accessible
+through the WebUI tray icon (click "Show Info Window").
+
+This panel displays:
+  - Session events
+  - Errors, warnings, and system messages
+  - Script execution updates
+  - Connection logs and activity history
+
+-------------------------------------------------------------------------------
+
+USER DASHBOARD
+---------------
+Once logged in, users will see:
+
+  • Live Desktop Stream (if enabled)
+  • File Browser
+  • Terminal Console
+  • Script Builder Interface
+
+Users can:
+  - Execute surtr commands (except those restricted by host).
+  - Build and run scripts directly in the Script Builder tab.
+  - Monitor outputs, logs, and visual results from one interface.
+
+Hosts retain the ability to:
+  - Restrict specific tabs or actions.
+  - Pause or resume the desktop stream globally.
+
+-------------------------------------------------------------------------------
+
+NOTES & REMINDERS
+-----------------
+• Each logged-in user operates within an isolated surtr session.
+• Hosts can end server at any time from the WebUI tray menu.
+• Default login credentials should be changed immediately using webuiconfig.exe.
+• For optimal performance, disable audio or lower stream quality on slower networks.
+
+-------------------------------------------------------------------------------
+
+SUMMARY
+--------
+surtr Professional WebUI bridges the power of local automation with the
+convenience of the web — combining real-time control, multi-user sessions,
+visual monitoring, and script building into a single, accessible interface.
+
+
+
+-------------------------------------------------------------------------------
+
+LAUNCH COMMAND QUICK REFERENCE
+------------------------------
+  webuilauncher                       → Launch WebUI (Default: 127.0.0.1:4444)
+  webuilauncher  start webui <host> <port>
+  webuilauncher  start webui <host> <port> <maxuser:n>
+  webuilauncher  start webui <host> <port> <maxuser:n> -savelogs uilogs.log   → debugging
+  webuiconfig.exe                   → Launch WebUI configuration tool
+
+-------------------------------------------------------------------------------
+
+DEFAULT LOGIN
+-------------
+  Username: admin
+  Password: admin
+
+Change immediately using the WebUIConfig application.
+
+===============================================================================
+
+SURTRUI — DESKTOP IDE
+
+Integrated Development Environment & Task Automation Hub for Surtr
+-------------------------------------------------------------------------------
+
+OVERVIEW
+--------
+SurtrUI is the powerful native desktop companion to the Surtr automation engine. 
+It provides a clean, fast, and fully integrated environment for writing, testing, 
+running, and scheduling Surtr automation scripts — without ever needing a browser.
+
+Think of SurtrUI as your personal Surtr IDE: script editing with syntax highlighting, 
+a live terminal for quick commands, and the unique Surtr Task Bot scheduler that 
+turns repetitive automation into fully unattended background jobs.
+
+No login required. No network dependency. Just powerful local control.
+
+-------------------------------------------------------------------------------
+
+KEY FEATURES
+------------
+
+1. SCRIPT BUILDER TAB
+   -------------------
+   • Full-featured script editor with syntax highlighting for Surtr .as files
+   • Dedicated command buttons to insert common commands instantly
+   • Undo/redo, search, save/load, and run scripts directly from the editor
+   • Perfect for writing complex automation workflows faster and with fewer typos
+
+2. TERMINAL TAB
+   -------------
+   • Execute one-line Surtr commands instantly
+   • Real-time output display with clear formatting
+   • Ideal for quick testing, debugging, and interactive experimentation
+   • All Surtr core commands and custom logic supported
+
+3. SURTR TASK BOT TAB
+   --------------------
+   • Create, edit, and manage automated scheduled tasks
+   • Set tasks to run on precise intervals: seconds, minutes, hours, days, weeks
+   • Fully unattended execution — Surtr Task Bot runs in background
+   • Add or remove multiple tasks at any time
+   • View next run time, last run status, and task history
+   • Most distinctive feature: turns any script or command into a recurring job
+
+-------------------------------------------------------------------------------
+
+USAGE
+-----
+
+STEP 1 — LAUNCH SURTRUI
+-----------------------
+Double-click surtrUI on the desktop or surtrui.exe in your Surtr installation folder.
+
+Alternatively, if Surtr is added to PATH:
+  surtrui
+
+The application opens immediately — no login, no configuration required.
+
+Default window layout:
+  • Left sidebar: navigation tabs (Terminal, Script Builder, Surtr Task Bot)
+  • Main area: active tab content
+
+-------------------------------------------------------------------------------
+
+STEP 2 — BASIC WORKFLOW
+-----------------------
+
+• Script Builder:
+  1. Click "Script Builder" tab
+  2. Use command buttons or type directly
+  3. Click "Run" or "ctrl + x" to execute immediately
+  4. Save script (.as) for later or for Task Bot
+
+• Terminal:
+  1. Click "Terminal" tab
+  2. Type any Surtr command (e.g. mouse move 500 300)
+  3. Press Enter — see live output
+
+• Surtr Task Bot:
+  1. Click "Surtr Bot Tasks" tab
+  2. Click "New Task"
+  3. Enter task name, command/script path, interval (e.g. every 30 minutes)
+  4. Save — task is now scheduled and runs automatically
+  5. Monitor status or delete tasks anytime
+
+-------------------------------------------------------------------------------
+
+STEP 3 — SURTR TASK BOT DETAILS
+-------------------------------
+The Task Bot is the standout feature of SurtrUI — it lets you schedule automation
+without external tools.
+
+Supported intervals:
+  • Seconds (e.g. every 45 seconds)
+  • Minutes (e.g. every 15 minutes)
+  • Hours (e.g. every 2 hours)
+  • Days (e.g. every day)
+  • Weeks (e.g. every Monday)
+
+Task types:
+  • One-line Surtr command
+  • Full .as script file
+  • Built-in actions (e.g. run another task, emit notification)
+
+Features:
+  • Real-time next-run countdown
+  • Last execution time & status
+  • Unlimited tasks (limited only by system resources)
+
+-------------------------------------------------------------------------------
+
+NOTES & REMINDERS
+-----------------
+• SurtrUI runs locally — no internet or login required
+• Task Bot continues running even if SurtrUI window is minimized or closed
+  (background service starts automatically on launch)
+• All tasks are stored in surtrconfig.conf / tasksbot.json
+• Syntax highlighting, auto-save, and undo/redo are available in Script Builder
+
+-------------------------------------------------------------------------------
+
+SUMMARY
+--------
+SurtrUI transforms Surtr from a command-line tool into a complete desktop 
+automation workstation. With powerful script editing, instant terminal access, 
+and the unique Surtr Task Bot scheduler, it lets you write, test, and automate 
+anything — all in one clean, native application.
+
+No web server, no credentials, no remote access needed — just pure local power.
+
+===============================================================================
+
+SURTRUI QUICK REFERENCE
+-----------------------
+Launch:                  surtrui.exe   (or double-click)
+Script Builder:          Write, save & run .as scripts visually
+Terminal:                Execute single Surtr commands instantly
+
+
+DEFAULT BEHAVIOR
+----------------
+No login required
+All data stored locally
+Task Bot runs in background automatically
+
+===============================================================================
+
+Conclusion
+surtr is your go-to tool for Windows automation, offering unparalleled flexibility and power.
+From simple mouse clicks to complex workflows involving image recognition and system monitoring,
+surtr empowers you to work smarter. Start scripting today and join the automation revolution! For support,
+feedback, or feature requests, contact via email: thescreenbot@gmail.com. Happy automating!
+
+
+

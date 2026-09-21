@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surtr Automation - Script Builder</title>
+    {% if configs["usesurtrtheme"] == "yes"%}
+          <link rel="stylesheet" href="{{ url_for('static', filename='css/surtrscript_builder.css') }}">
+    {% endif %}
+
+    {% if configs["usesurtrtheme"] == "no"%}
+          <link rel="stylesheet" href="{{ url_for('static', filename='css/script_builder.css') }}"> 
+    {% endif %}
+         
+  
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar with command buttons -->
+        <div class="sidebar">
+            <h2>Script Builder</h2>
+            <input type="file" id="fileinput" hidden accept=".as">
+            <button class="action-btn" onclick="loadScript()">Load file</button>
+            <button class="action-btn" onclick="saveScript()">Save Script</button>
+            <button class="action-btn" onclick="runScript()">Run Script</button>
+            <!-- ScreenBot commands -->
+             <button class="command-btn" data-command="comment">comments</button>
+            <button class="command-btn" data-command="screenShot">screenShot</button>
+            <button class="command-btn" data-command="screenShotMonitor">screenShotMonitor</button>
+            <button class="command-btn" data-command="mouse">mouse</button>
+            <button class="command-btn" data-command="keyboard">keyBoard</button>
+            <button class="command-btn" data-command="if_else">if</button>
+            <button class="command-btn" data-command="createlabel">Add a label</button>
+            <button class="command-btn" data-command="run">run</button>
+            <button class="command-btn" data-command="seeimage">seeImage</button>
+            <button class="command-btn" data-command="wait">wait</button>
+            <button class="command-btn" data-command="speech">say/talk</button>
+            <button class="command-btn" data-command="addvariable">set</button>
+            <button class="command-btn" data-command="msg">msg</button>
+            <button class="command-btn" data-command="confirm">confirm</button>
+            <button class="command-btn" data-command="userinput">userInput</button>
+            <button class="command-btn" data-command="readimage">readImage</button>
+            <button class="command-btn" data-command="readscreen">readScreen</button>
+            <button class="command-btn" data-command="wordocr">wordOCR</button>
+            <button class="command-btn" data-command="textocr">textOCR</button>
+            <button class="command-btn" data-command="runcmd">runCmd</button>
+            <button class="command-btn" data-command="repeat">repeat</button>
+            <button class="command-btn" data-command="screensize">screen size</button>
+            <button class="command-btn" data-command="mouseposition">mouse position</button>
+            <button class="command-btn" data-command="files">Files</button>
+            <button class="command-btn" data-command="window">Window</button>
+            <button class="command-btn" data-command="clipboard">clipboard</button>
+            <button class="command-btn" data-command="watchdog">watchdog</button>
+            <button class="command-btn" data-command="timer">timer</button>
+            <button class="command-btn" data-command="pixel">Pixels</button>
+            <button class="command-btn" data-command="getenv">getEnv</button>
+            <button class="command-btn" data-command="commandregister">register command</button>
+            <button class="command-btn" data-command="get">get</button>
+
+            <button class="command-btn" data-command="textlower">textLower</button>
+            <button class="command-btn" data-command="textupper">textUpper</button>
+            <button class="command-btn" data-command="textstartwith">textStartWith</button>
+            <button class="command-btn" data-command="textendwith">textEndWith</button>
+            <button class="command-btn" data-command="texthas">textHas</button>
+            <button class="command-btn" data-command="tobase">toBase64</button>
+            <button class="command-btn" data-command="empty">empty</button>
+            <button class="command-btn" data-command="decodebase">decodeBase64</button>
+
+
+            <button class="command-btn" data-command="resetenvironment">resetEnvironment</button>
+            <button class="command-btn" data-command="getvalue">getValue</button>
+            <button class="command-btn" data-command="stopscript">stop/stopScript</button>
+            <button class="command-btn" data-command="security">security</button>
+            <button class="command-btn" data-command="textonscreen">textOnScreen</button>
+            <button class="command-btn" data-command="emit">emit</button>
+            <button class="command-btn" data-command="JSON">JSON</button>
+            <button class="command-btn" data-command="recorder">recorder</button>
+            <button class="command-btn" data-command="replace">replace</button>
+            <button class="command-btn" data-command="random">random</button>
+            <button class="command-btn" data-command="splitrun">splitRun</button>
+            <button class="command-btn" data-command="integer">integer</button>
+            <button class="command-btn" data-command="exit">exit</button>
+        </div>
+        <!-- Main script editing area -->
+        <div class="main">
+            <textarea id="scriptArea" placeholder="Write your script here or click commands to add..."></textarea>
+        </div>
+    </div>
+
+    <!-- Popup modal for command options -->
+    <div id="commandModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modalTitle">Select Command Options</h3>
+            <div id="modalOptions"></div>
+            <button class="modal-btn" onclick="insertCommand()">Insert Command</button>
+        </div>
+    </div>
+
+    <!-- Popup modal for run script options -->
+    <div id="shellarea" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modalTitle">SHELL INTERFACE</h3>
+            <div id="responds">
+
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script_builder.js') }}"></script>
+</body>
+</html>
+

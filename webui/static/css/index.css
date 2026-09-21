@@ -1,0 +1,69 @@
+/* General Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    padding: 2rem;
+    background: linear-gradient(120deg, #1c1f26, #2f3640);
+    color: white;
+    overflow: auto;
+}
+
+
+/* Headings */
+h1, h3, h2 {
+    color: #ffffff;
+    text-align: center;
+    margin: 1rem 0;
+}
+p{
+    font-size: 20px;
+}
+
+#uname{
+   width: 50%;
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: #2f3640;
+    color: white;
+    font-size: 30px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+#pswrd{
+ width: 50%;
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: #2f3640;
+    color: white;
+    font-size: 30px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+#spass{
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: #2f3640;
+    color: white;
+    font-size: 20px;
+    margin-bottom: 2rem;
+}
+#conectbtn{
+    width: 20%;
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: #2f3640;
+    color: white;
+    font-size: 30px;
+    transition: box-shadow 500ms;
+}
+
+#conectbtn:hover{
+   box-shadow: 1px 3px 34px 11px white;
+  
+}
+/* Responsive Fixes */
+@media (max-width: 768px) {
+   
+}

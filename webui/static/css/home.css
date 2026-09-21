@@ -1,0 +1,401 @@
+/* General Body Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 2rem;
+    background: linear-gradient(120deg, #1c1f26, #2f3640);
+    color: white;
+    overflow: auto;
+}
+
+
+/* Headings */
+h1, h3, h2 {
+    color: #ffffff;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+/* Tabs Container */
+#tabs {
+    border-radius: 12px;
+    width: 100px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* center vertically */
+    z-index: 8;
+    display: flex;
+    flex-direction: column; /* vertical tabs */
+    background-color: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+}
+
+
+#logout{
+   background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: background 0.3s ease;
+    box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.829);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 0 0 10px 10px;
+
+}
+#logout:hover {
+    background-color: #4CAF50;
+}
+
+/* Drag handle */
+#tabsdrag {
+    position: relative;
+    cursor: grab;
+    height: 100%;
+    width: 40px;
+    color: white;
+    background: #111;
+    font-size: 32px;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tab Buttons */
+#tabs button {
+    background: none;
+    border: none;
+    padding: 0.75rem 1rem;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+#tabs button:hover {
+    background-color: #4CAF50;
+}
+
+/* Terminal Panel */
+#cli-tab {
+    
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 100%;
+    padding: 1rem;
+    background-color: #222;
+    color: white;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.2);
+    z-index: 5;
+    width: fit-content;
+    border: 1px solid black;
+}
+
+#command-form {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+#command {
+    flex: 1;
+    min-width: 200px;
+    width: 600px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #333;
+    color: white;
+}
+
+
+#opts{
+     display:flex;
+    justify-content: right;
+}
+
+/* Command Output */
+#output {
+    background-color: #111;
+    color: #0f0;
+    padding: 1rem;
+    border-radius: 10px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+
+/* Run button (submit) */
+#command-form button[type="submit"] {
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 50%; /* circular button to match close button */
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    padding: 0; /* remove extra padding for perfect circle */
+}
+
+/* Hover & active effects for submit button */
+#command-form button[type="submit"]:hover {
+    background-color: #28a745; /* slightly lighter green */
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+#command-form button[type="submit"]:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Close button (unchanged but with matching hover/active) */
+#close {
+    background-color: crimson;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+#close:hover {
+    background-color: #ff4d4d;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+#close:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+
+
+/* File Tab */
+#files-tab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 75%;
+    height: 100%;
+    background: #1e272e;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+    padding: 1rem;
+    overflow: auto;
+}
+
+/* Batch Tab */
+#batch-tab {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    background: #1e272e;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+    padding: 1rem;
+    overflow: auto;
+}
+
+/* Screen Tab */
+#screen-tab {
+    position: absolute;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+#screen {
+    display: block;
+    border-radius: 10px;
+    border: 2px solid #555;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+     user-select: none;
+    pointer-events: none; /* prevent accidental drag-select */
+}
+
+
+/* Spinner styling */
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* Desktop Stream */
+
+
+#desk {
+    resize: both;
+    overflow: auto;
+    width: fit-content;
+    height: fit-content;
+    max-width: 100%;
+    max-height: 80vh;
+    cursor: grab;
+   border: 1px solid #444;
+    position: relative;
+
+}
+
+/* Dark mode/light mode toggle */
+body.light-mode {
+    background: #f4f4f4;
+    color: #111;
+}
+
+body.light-mode #cli-tab,
+body.light-mode #batch-tab,
+body.light-mode #files-tab {
+    background-color: #fff;
+    color: #111;
+}
+
+body.light-mode a,
+body.light-mode #output,
+body.light-mode #down {
+    color: #111 !important;
+}
+
+
+
+/* Live Audio */
+audio {
+    margin-top: 1rem;
+}
+
+/* File List */
+li {
+    border: 1px solid white;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    list-style: none;
+    margin: 0.5rem 0;
+    background-color: #2f3640;
+    border-radius: 8px;
+}
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#down {
+    color: white;
+    background-color: green;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+/* Batch Run Input/Output Areas */
+#cntner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+#input-area, #output-area {
+   width: 80%;
+    padding: 1rem;
+    background: #2f3640;
+    border-radius: 10px;
+    overflow: auto;
+    min-height: 219px;
+    max-height: 500px;
+
+}
+
+#input-area {
+    border: 2px dashed #4CAF50;
+}
+#output-area {
+    border: 2px solid #999;
+}
+
+/* Run Button */
+#runfile {
+    width: 30%;
+    height: 40px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #4CAF50, #2ecc71);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    padding-top: 20px;
+}
+
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+    /*
+    #tabs {
+        width: 80%;
+        left: 50%;
+        bottom: 5%;
+        transform: translateX(-50%);
+    }
+    */
+    #cli-tab, #files-tab, #batch-tab, #screen-tab {
+        margin: 0;
+    }
+    #command {
+        width: 100%;
+    }
+}

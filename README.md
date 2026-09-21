@@ -2,439 +2,1098 @@
 
 **Reliable Windows Automation — Image & OCR Powered**
 
-Surtr – Reliable Windows Automation When Other Tools Fail
+### Surtr — Reliable Windows Automation When Other Tools Fail
 
 [![GitHub stars](https://img.shields.io/github/stars/vyixor/surtr?style=social)](https://github.com/vyixor/surtr/stargazers)
 [![GitHub release](https://img.shields.io/github/v/release/vyixor/surtr)](https://github.com/vyixor/surtr/releases)
 [![Downloads](https://img.shields.io/github/downloads/vyixor/surtr/total)](https://github.com/vyixor/surtr/releases)
+[![License](https://img.shields.io/github/license/vyixor/surtr)](LICENSE)
 
-Many automation tools rely on fixed coordinates or fragile selectors. Scripts break when windows move, apps update, or screens change resolution.
+> **Just keep building.**
 
-Surtr is a free, open-source, lightweight tool that automates almost anything on Windows — especially when other tools break due to UI changes, window moves, app updates, or different resolutions.
+Many automation tools rely on fixed coordinates or fragile selectors. Scripts break when windows move, applications update, or screen resolutions change.
 
-Instead of fragile coordinates or brittle selectors, Surtr **looks at your screen like a human** — using **image detection** and **OCR (text recognition)** to find and interact with buttons, text, icons, and forms reliably.
+**Surtr** is a free, open-source Windows automation tool built to keep working when simpler automation approaches fail.
 
-![Surtr in action — clicking button by image even after resize](assets/surtr-image-click-demo.gif)  
-*(Image-based automation survives window moves and resolution changes)*
+Instead of relying only on fixed coordinates or brittle selectors, Surtr can **look at the screen like a human** using image detection and OCR to find and interact with buttons, text, icons, forms, and other visual elements.
 
-## Why Choose Surtr?
+![Surtr in action — clicking button by image even after resize](assets/surtr-image-click-demo.gif)
 
-- Works when coordinate-based macros fail  
-- Built-in macro recorder turns actions into instant scripts  
-- Powerful web downloader (often faster than IDM)  
-- Advanced OCR for reading receipts, invoices, screenshots  
-- **SurtrUI** desktop IDE + **WebUI** remote access — both completely free  
-- Task Bot scheduler for unattended recurring jobs  
-- No subscriptions, no ads, fully offline by default  
+*Image-based automation can survive window movement, resizing, and different screen layouts.*
 
-## Quick Start (2 minutes)
+---
 
-1. Download the latest release: [https://github.com/vyixor/surtr/releases/latest](https://github.com/vyixor/surtr/releases/latest)
-2. Run the installer (adds to PATH automatically)
-3. Open CMD and test:
+# Why Surtr?
+
+* Works when coordinate-based macros fail
+* Built-in macro recorder turns actions into reusable scripts
+* Image-based automation and OCR
+* Powerful downloader and scraping tools
+* Advanced OCR for screenshots, receipts, invoices, and documents
+* **SurtrUI** desktop IDE with visual script building
+* **WebUI** for browser-based remote control
+* Task Bot scheduler for unattended recurring jobs
+* Built-in JSON processing
+* Extensive scripting capabilities
+* Runs locally with no cloud dependency
+* No subscriptions
+* No ads
+* Open source
+
+Surtr was built over months of experimentation, debugging, redesigning, and adding features. It is still evolving, but the core idea remains simple:
+
+> **Build automation that doesn't fall apart the moment the screen changes.**
+
+---
+
+# Quick Start
+
+## For normal users
+
+Download the latest release:
+
+**[Download the latest Surtr release](https://github.com/vyixor/surtr/releases/latest)**
+
+Install Surtr and open Command Prompt:
+
+```bat
 surtr --version
-text4. Launch the desktop IDE:  
-Double-click surtrUI on the desktop or `surtrui.exe` in surtr installation folder (or run `surtrui`)
-5. Launch WebUI (remote/browser control):  
-Run `webuilauncher` → open http://127.0.0.1:4444  
-Default login: admin / admin (change immediately!)
+```
 
-You now have:
-- Local SurtrUI (IDE + Task Bot)
-- Remote WebUI (browser access to desktop, scripts, files)
+Launch the desktop IDE:
 
-Full docs: [screenbot.cu.ma/docs.php](http://screenbot.cu.ma/docs.php) or run `define` in Surtr.
+```bat
+surtrui
+```
 
-## How Surtr Works: The Basics
+or launch `surtrui.exe` from the installation directory.
 
-Surtr runs as a lightweight CLI tool, but shines through its **visual intelligence**:
-- **Image Detection** (`seeImage`, `moveToWord`, `textOnScreen`)  
-Searches screen for images or text → returns coordinates or true/false
-- **OCR Engine** (`imageReader`, `readScreen`)  
-Extracts text from live screen or images
-- **Scripting (.as files)**  
-Variables `{{var}}`, conditions `if ?run`, loops, labels, multi-line `^^ … ^^`
-- **SurtrUI** — native IDE with visual builder, terminal, Task Bot
-- **WebUI** — browser-based remote control (live desktop stream, file browser, terminal, script builder)
+To launch WebUI:
 
-Everything runs locally — no cloud dependency.
+```bat
+webuilauncher
+```
 
-## Power Feature #1 — Fetcher: Faster Downloads & Scraping
+Then open:
 
-Fetcher is Surtr's built-in web tool — often **faster than IDM** thanks to parallel segmented downloads, retries, and backoff.
+```text
+http://127.0.0.1:4444
+```
 
-### Single Fast Download (beats IDM on big files)
-<div align="center">
-  <img src="assets/livedownload.png" width="48%" alt="Live fetcher download">
-</div>
+> **Important:** If you use WebUI, change the default password immediately.
 
-``` 
+---
 
+# Developer Setup — Run Surtr From Source
+
+Want to explore the source code, modify Surtr, build your own commands, or contribute?
+
+You're welcome here.
+
+The source version of Surtr is intended for **Windows**.
+
+## Recommended Python version
+
+The recommended Python version for the current source tree is:
+
+```text
+Python 3.11.9
+```
+
+Using the recommended version helps avoid compatibility problems with some of Surtr's Windows-specific dependencies.
+
+Check your Python version:
+
+```bat
+python --version
+```
+
+Expected:
+
+```text
+Python 3.11.9
+```
+
+## 1. Clone the repository
+
+```bat
+git clone https://github.com/vyixor/surtr.git
+cd surtr
+```
+
+## 2. Create a virtual environment
+
+Recommended:
+
+```bat
+python -m venv .venv
+```
+
+Activate it on Windows:
+
+```bat
+.venv\Scripts\activate
+```
+
+Your terminal should now show something similar to:
+
+```text
+(.venv)
+```
+
+## 3. Install dependencies
+
+Install everything from the included requirements file:
+
+```bat
+python -m pip install -r requirements.txt
+```
+
+If `pip` is outdated:
+
+```bat
+python -m pip install --upgrade pip
+```
+
+Then install the requirements again:
+
+```bat
+python -m pip install -r requirements.txt
+```
+
+---
+
+# OCR Setup — Tesseract
+
+Surtr's OCR functionality uses **Tesseract OCR**.
+
+You have two ways to make Tesseract available.
+
+## Option 1 — Install Tesseract normally
+
+Install Tesseract OCR on Windows using a suitable Tesseract distribution.
+
+After installation, make sure `tesseract.exe` is available to Surtr.
+
+Then test it from Command Prompt:
+
+```bat
+tesseract --version
+```
+
+If Windows recognizes the command, Surtr should normally be able to find it.
+
+---
+
+## Option 2 — Use Surtr's local OCR directory
+
+If Tesseract is installed but Surtr cannot detect it automatically, you can place Tesseract directly inside Surtr's OCR resources directory.
+
+Use:
+
+```text
+resources\OcR
+```
+
+The important file is:
+
+```text
+resources\OcR\tesseract.exe
+```
+
+Copy the required Tesseract files into that directory so that `tesseract.exe` is directly available there.
+
+Your directory should look approximately like:
+
+```text
+surtr/
+│
+├── resources/
+│   └── OcR/
+│       ├── tesseract.exe
+│       └── ...
+│
+├── autoscreen.py
+├── requirements.txt
+└── ...
+```
+
+This local fallback is useful when Surtr cannot detect a system-wide Tesseract installation.
+
+### If OCR is not working
+
+Check that this file exists:
+
+```text
+resources\OcR\tesseract.exe
+```
+
+Then try running Tesseract manually:
+
+```bat
+resources\OcR\tesseract.exe --version
+```
+
+If that works, Surtr should be able to use the local copy.
+
+---
+
+# Run Surtr From Source
+
+Once Python, the dependencies, and Tesseract are ready:
+
+```bat
+python autoscreen.py
+```
+
+If everything is installed correctly, Surtr should start normally.
+
+That's it.
+
+You can then explore the source, modify commands, create your own automation logic, and experiment with the framework.
+
+---
+
+# Developer Quick Setup
+
+For experienced developers, the entire setup is essentially:
+
+```bat
+git clone https://github.com/vyixor/surtr.git
+cd surtr
+
+python -m venv .venv
+.venv\Scripts\activate
+
+python -m pip install -r requirements.txt
+
+python autoscreen.py
+```
+
+If OCR fails:
+
+```text
+Make sure resources\OcR\tesseract.exe exists.
+```
+
+---
+
+# How Surtr Works
+
+Surtr runs as a lightweight CLI automation engine, but its real strength comes from combining automation with visual understanding.
+
+### Image Detection
+
+Commands such as:
+
+```text
+seeImage
+moveToWord
+textOnScreen
+```
+
+can search the screen for images or text and return coordinates, status values, or matches.
+
+### OCR Engine
+
+Commands such as:
+
+```text
+imageReader
+readScreen
+```
+
+can extract text from screenshots and other images.
+
+### Surtr Scripting
+
+Surtr provides its own scripting syntax with support for:
+
+* Variables
+* Conditions
+* Loops
+* Labels
+* External scripts
+* Multi-line blocks
+* JSON operations
+* Error handling
+* Task automation
+
+Example:
+
+```text
+if {{input}} ?cntn bad ?run stop
+```
+
+### SurtrUI
+
+SurtrUI provides a native desktop interface with:
+
+* Script Builder
+* Syntax highlighting
+* Command tools
+* Terminal
+* Task Bot
+* Script management
+
+### WebUI
+
+The WebUI provides browser-based access to Surtr, including:
+
+* Live desktop streaming
+* File browser
+* Terminal
+* Script Builder
+* Remote automation control
+
+Everything is designed to run locally.
+
+---
+
+# Power Feature #1 — Fetcher
+
+Fetcher is Surtr's built-in downloading and web-fetching system.
+
+It supports:
+
+* Parallel segmented downloads
+* Retries
+* Backoff
+* Batch downloads
+* HTML parsing
+* JSON parsing
+* Data extraction
+* Local HTML parsing
+
+## Single download
+
+```bat
 fetcher -fetch-download ^
 -url https://example.com/linux.iso ^
 -saveto linux.iso ^
--split-download 8 ^           # 8 parallel chunks
--chunk-size 4096 ^            # 4 MB per chunk
--retries 10 ^                 # retry up to 10 times
--backoff-factor 1.5 ^         # increasing delay on retry
--show-progress                # live progress bar
+-split-download 8 ^
+-chunk-size 4096 ^
+-retries 10 ^
+-backoff-factor 1.5 ^
+-show-progress
 ```
 
-Multiple / Batch Downloads
-Create downloads.json:
+## Batch downloads
 
-```
+Create `downloads.json`:
+
+```json
 [
-  {"url": "https://site.com/file1.zip", "save_as": "dl1.zip", "split_download": 6},
-  {"url": "https://site.com/video.mp4", "save_as": "movie.mp4", "split_download": 12}
+  {
+    "url": "https://site.com/file1.zip",
+    "save_as": "dl1.zip",
+    "split_download": 6
+  },
+  {
+    "url": "https://site.com/video.mp4",
+    "save_as": "movie.mp4",
+    "split_download": 12
+  }
 ]
 ```
 
 Run:
-`fetcher -fetch-download-json downloads.json -max-worker 10`
-→ Downloads 10 files concurrently, each split → finishes batch much faster.
 
-Web Scraping with Fetcher
+```bat
+fetcher -fetch-download-json downloads.json -max-worker 10
+```
+
+This allows multiple downloads to run concurrently while each download can also use segmented transfers.
+
+## Web scraping
 
 Fetch → parse → extract:
-```fetcher -fetch '[{"url":"https://news.com/article","parser":"bs4","select":"div"}]'```
 
-BS4 vs SBS4 parser — which to use?
+```bat
+fetcher -fetch "[{\"url\":\"https://news.com/article\",\"parser\":\"bs4\",\"select\":\"div\"}]"
+```
 
-BS4 (BeautifulSoup): full HTML parsing — accepts local file path even raw html text in the url field. Best for complex selectors, classes, nesting
-Example: -select "div.article > p:first-child"
-SBS4 (STRICT): only accepts http,https in the url field
-Example: -select "p" → all paragraphs as plain text
+### BS4 vs SBS4
 
-Scrape Local HTML Files
+**BS4**
 
-```fetcher -fetch '[{"url":"C:\path\myfile.html","parser":"bs4","select":"div"}]'```
+Full BeautifulSoup parsing.
 
-Power Feature #2 — imageReader (Advanced OCR)
-Extract text from images, screenshots, receipts, invoices.
+Useful for:
 
-Basic:
-`imageReader -image receipt.png -lang eng`
+* Complex selectors
+* Classes
+* Nested structures
+* Local HTML files
+* Raw HTML content
 
-Best practices:
+Example:
 
-Clean low-contrast scans `imageReader -image scan.jpg -transform bw -min-conf 65 -psm 6`
-Preserve columns/layout `imageReader -image invoice.png -char-width 9 -line-height 22 -save invoice.txt`
-Silent + save `imageReader -image screenshot.png -hide-output -save result.txt`
-Live screen OCR `screenShot temp.png ++ imageReader -image temp.png -lang eng`
+```text
+-select "div.article > p:first-child"
+```
 
-Power Feature #3 — SurtrUI (Desktop IDE)
-Launch: surtrui or double-click surtrUi
+**SBS4**
 
-Three tabs:
+Strict web parser.
 
-Script Builder — visual editor, syntax highlighting, command buttons, run/save instantly
-Terminal — type Surtr commands live, see output immediately
-Surtr Task Bot — schedule anything (every 5 min, daily, weekly), monitor next run
+Accepts:
 
-SurtrUI screenshot — Script Builder + Task Bot
+```text
+http://
+https://
+```
 
-## Surtr in Action
+Example:
+
+```text
+-select "p"
+```
+
+## Scrape a local HTML file
+
+```bat
+fetcher -fetch "[{\"url\":\"C:\\path\\myfile.html\",\"parser\":\"bs4\",\"select\":\"div\"}]"
+```
+
+---
+
+# Power Feature #2 — imageReader
+
+Surtr includes an OCR system for extracting text from:
+
+* Screenshots
+* Receipts
+* Invoices
+* Documents
+* Images
+* Live desktop captures
+
+## Basic OCR
+
+```text
+imageReader -image receipt.png -lang eng
+```
+
+## Improve difficult scans
+
+```text
+imageReader -image scan.jpg -transform bw -min-conf 65 -psm 6
+```
+
+## Preserve document layout
+
+```text
+imageReader -image invoice.png -char-width 9 -line-height 22 -save invoice.txt
+```
+
+## Silent OCR + save
+
+```text
+imageReader -image screenshot.png -hide-output -save result.txt
+```
+
+## OCR a live screen
+
+```text
+screenShot temp.png ++ imageReader -image temp.png -lang eng
+```
+
+---
+
+# Power Feature #3 — SurtrUI
+
+Launch:
+
+```bat
+surtrui
+```
+
+or open `surtrUi.exe`.
+
+SurtrUI includes three major areas:
+
+### Script Builder
+
+Visually create and edit Surtr scripts with syntax highlighting and command helpers.
+
+### Terminal
+
+Run Surtr commands interactively and inspect output immediately.
+
+### Surtr Task Bot
+
+Schedule automation such as:
+
+* Every few minutes
+* Hourly
+* Daily
+* Weekly
+* Custom recurring jobs
+
+---
+
+# Surtr In Action
 
 <div align="center">
   <img src="assets/ide.png" width="48%" alt="SurtrUI Script Builder view">
-  <img src="assets/taskbot.png" width="48%" alt="SurtrUi Taskbot view">
-  <img src="assets/terminal.png" width="48%" alt="surtrUi Terminal view">
+  <img src="assets/taskbot.png" width="48%" alt="Surtr Task Bot view">
+  <img src="assets/terminal.png" width="48%" alt="Surtr Terminal view">
 </div>
 
+---
 
-Power Feature #4 — WebUI (Remote Browser Control)
+# Power Feature #4 — WebUI
 
-Launch: webuilauncher → open http://127.0.0.1:4444
+Launch:
 
-<div align="center">
-  <img src="assets/webuisettings0.png" width="48%" alt="Surtr Webui Settings 0 view">
-  <img src="assets/webuisettings1.png" width="48%" alt="Surtr Webui Settings 1 view">
-  <img src="assets/webuiclidashboard.png" width="48%" alt="surtr Webui CLI view">
-</div>
-
-Default login: admin / admin (change immediately!)
-What you get in browser:
-
-Live Desktop Stream — watch Surtr automate in real time
-File Browser — explore/download files remotely
-Terminal — run commands from anywhere
-Script Builder — build/run scripts visually in browser
-
-WebUI live desktop stream example
-
-<div align="center">
-  <img src="assets/webuilogin.png" width="48%" alt="Surtr Webui Login view">
-  <img src="assets/dashboard.png" width="48%" alt="Surtr Webui Dashboard view">
-  <img src="assets/webscriptbuilder.png" width="48%" alt="surtr Webui Script Builder view">
-</div>
-
-
-
-## Surtr Macro Recorder — Turn Actions into Scripts Instantly
-
-One of Surtr’s most powerful features is the built-in **Macro Recorder** — it watches what you do with your mouse and keyboard, then automatically generates a perfect Surtr script (.as file) that replays those exact actions reliably.
-
-### How to Use It (30 seconds)
-
-1. Open SurtrUI (or run `surtrui` in CMD)
-2. run command: `startRecorder mymacro.as` OR `startRecorder mymacro.as 60` recorder will stop after 60 seconds
-   
-3. Do your normal actions:
-   - Click buttons
-   - Type text
-   - Move windows
-   - Scroll pages
-   - Anything!
-4. run `stopRecorder`
- 
-5. Surtr instantly creates `mymacro.as` with mouse + keyboard actions saved to the script
-
-Now run it anytime:
-
-surtr run mymacro.as
-
-### Real Example of Generated Script
-
-Macro Recorder in action — recording & replaying reliably
-
-![Replay recorded script](assets/macro-recorder-demo.gif)  
-
-Pro Tips for Best Results
-
-Keep actions clear — avoid very fast clicks
-Use consistent button appearance — save clean PNGs of buttons/icons if needed
-Edit the script — open in SurtrUI → add conditions, loops, variables
-Combine with Task Bot — record once → schedule forever (e.g. auto-save every hour)
-Test after changes — resize windows or move apps → run script → verify it still works
-
-The Macro Recorder turns hours of repetitive work into a one-click script.
-
-
-Security notes:
-
-Change default password via webuiconfig.exe
-Use strong password + limit max users (webuilauncher ... maxuser:2)
-Runs locally — no external server needed
-
-Security & Best Practices
-
-Enable guest mode: guestUser on → blocks dangerous commands
-Password protect: setSecurityPassword strongpass → activateSecurity
-Use set {{onerror}} mylabel: to handle failures gracefully
-Validate inputs: if {{input}} ?cntn bad ?run stop
-Test in SurtrUI terminal before scheduling
-Keep Surtr updated — fixes improve security
-
-Quick Examples
-
-Auto-click save button 
+```bat
+webuilauncher
 ```
+
+Then open:
+
+```text
+http://127.0.0.1:4444
+```
+
+<div align="center">
+  <img src="assets/webuisettings0.png" width="48%" alt="Surtr WebUI Settings">
+  <img src="assets/webuisettings1.png" width="48%" alt="Surtr WebUI Settings">
+  <img src="assets/webuiclidashboard.png" width="48%" alt="Surtr WebUI CLI dashboard">
+</div>
+
+### What you get
+
+**Live Desktop Stream**
+
+Watch Surtr automate the desktop in real time.
+
+**File Browser**
+
+Browse and download files remotely.
+
+**Terminal**
+
+Execute commands through the browser.
+
+**Script Builder**
+
+Build and run Surtr scripts without leaving the browser.
+
+<div align="center">
+  <img src="assets/webuilogin.png" width="48%" alt="Surtr WebUI Login">
+  <img src="assets/dashboard.png" width="48%" alt="Surtr WebUI Dashboard">
+  <img src="assets/webscriptbuilder.png" width="48%" alt="Surtr WebUI Script Builder">
+</div>
+
+> **Security:** Change the default WebUI password immediately after setup.
+
+---
+
+# Surtr Macro Recorder
+
+One of Surtr's most useful features is the built-in **Macro Recorder**.
+
+It watches your mouse and keyboard actions and converts them into a Surtr `.as` script.
+
+## Record a macro
+
+Open SurtrUI or run:
+
+```text
+startRecorder mymacro.as
+```
+
+You can also specify a recording duration:
+
+```text
+startRecorder mymacro.as 60
+```
+
+Perform your normal actions:
+
+* Click buttons
+* Type text
+* Move windows
+* Scroll
+* Navigate applications
+* Perform repetitive workflows
+
+Stop recording:
+
+```text
+stopRecorder
+```
+
+Surtr creates:
+
+```text
+mymacro.as
+```
+
+Run it with:
+
+```bat
+surtr run mymacro.as
+```
+
+![Replay recorded script](assets/macro-recorder-demo.gif)
+
+## Tips for better recordings
+
+* Keep actions deliberate
+* Avoid unnecessarily fast clicks
+* Save clean reference images when visual matching is required
+* Open recorded scripts in SurtrUI and refine them
+* Add conditions, loops, and variables
+* Combine recordings with Task Bot
+* Test your automation after changing window size or layout
+
+Record once.
+
+Improve the script.
+
+Schedule it.
+
+Let Surtr do the repetitive work.
+
+---
+
+# Security Notes
+
+Surtr is a powerful automation tool because it can interact with your Windows environment.
+
+That power should be used responsibly.
+
+### WebUI
+
+Change the default password via the WebUI configuration tools.
+
+Use a strong password and configure the maximum number of users appropriately.
+
+### Guest mode
+
+Enable guest restrictions when appropriate:
+
+```text
+guestUser on
+```
+
+### Security password
+
+```text
+setSecurityPassword strongpass
+activateSecurity
+```
+
+### Error handling
+
+Use:
+
+```text
+set {{onerror}} mylabel:
+```
+
+to provide controlled failure handling.
+
+### Validate inputs
+
+Example:
+
+```text
+if {{input}} ?cntn bad ?run stop
+```
+
+### Best practices
+
+* Test scripts before scheduling them
+* Be careful when executing shell commands
+* Avoid running untrusted scripts
+* Review automation code before running it
+* Keep Surtr updated
+* Use strong WebUI credentials
+* Restrict remote access when it is not needed
+
+---
+
+# Quick Examples
+
+## Auto-click a save button
+
+```text
 while not seeImage save-btn.png ?run wait 2
 mouse click
 ```
-Read price from screenshot
-```
+
+## Read a price from a screenshot
+
+```text
 screenShot price.png ++ imageReader -image price.png -lang eng -save price.txt
 ```
-Schedule daily backup
-In SurtrUI Task Bot:
-Command: fileman copy C:\Data D:\Backup
-Interval: every day at 23:00
 
-## Surtr JSON – Easy & Powerful Data Handling
+## Schedule a daily backup
 
-Surtr has built-in JSON commands that let you create, read, modify, append, save, delete, and query JSON data directly in scripts — no external tools needed.
+Example Task Bot command:
 
-JSON is stored in memory during your session (not persistent across runs unless saved to file).
-
-### How Paths Work in Surtr JSON
-
-- **Keys** (even simple ones) are always wrapped in square brackets: `[key]`
-- **Numeric indices** (for lists/arrays) are left as plain numbers: `.0`, `.1`, etc.
-- Paths start with the JSON name, then chain with dots: `name.[key].0.[subkey]`
-
-This is the exact syntax Surtr expects — no exceptions.
-
-### All JSON Commands (with real syntax)
-
-| Command                        | Purpose                                      | Correct Example                                      |
-|--------------------------------|----------------------------------------------|------------------------------------------------------|
-| `json <name> <json>`           | Create or update named JSON                  | `json config {"theme":"dark"}`                       |
-| `json <name>`                  | Print entire JSON                            | `json config`                                        |
-| `json <name>.[key]`            | Get value at key                             | `json config.[theme]`                                |
-| `json <name>.[key] <value>`    | Set value at key (creates if missing)        | `json config.[theme] light`                          |
-| `jsonAppend <path> <value>`    | Append to list or dict at path               | `jsonAppend config.[favorites] "SurtrUI"`            |
-| `jsonSave <name> <file> [indent]` | Save JSON to file (pretty with indent)    | `jsonSave config settings.json 2`                    |
-| `jsonDelete <path>`            | Delete key or index at path                  | `jsonDelete config.[theme]`<br>`jsonDelete config.[list].0` |
-| `lenJson <path>`               | Get length of array/string/object            | `lenJson config.[favorites]`                         |
-| `jsonParse <json>`             | Parse raw JSON string (prints, no storage)   | `jsonParse {"key":"value"}`                          |
-
-### Real Working Examples
-
-1. **Create, read, set, and delete**
-
+```text
+fileman copy C:\Data D:\Backup
 ```
-~~ Create JSON
+
+Schedule:
+
+```text
+Every day at 23:00
+```
+
+---
+
+# Surtr JSON
+
+Surtr includes built-in JSON commands for creating, reading, modifying, appending, saving, deleting, and querying JSON data directly from automation scripts.
+
+JSON is stored in memory during a session and remains available across runs only when saved to a file.
+
+## JSON path syntax
+
+Keys are wrapped in square brackets:
+
+```text
+[key]
+```
+
+Numeric array indexes remain plain:
+
+```text
+.0
+.1
+.2
+```
+
+Example:
+
+```text
+config.[theme]
+config.[users].0.[name]
+```
+
+## JSON commands
+
+| Command                           | Purpose            | Example                                   |
+| --------------------------------- | ------------------ | ----------------------------------------- |
+| `json <name> <json>`              | Create/update JSON | `json config {"theme":"dark"}`            |
+| `json <name>`                     | Print entire JSON  | `json config`                             |
+| `json <name>.[key]`               | Read a value       | `json config.[theme]`                     |
+| `json <name>.[key] <value>`       | Set a value        | `json config.[theme] light`               |
+| `jsonAppend <path> <value>`       | Append data        | `jsonAppend config.[favorites] "SurtrUI"` |
+| `jsonSave <name> <file> [indent]` | Save JSON          | `jsonSave config settings.json 2`         |
+| `jsonDelete <path>`               | Delete a value     | `jsonDelete config.[theme]`               |
+| `lenJson <path>`                  | Get length         | `lenJson config.[favorites]`              |
+| `jsonParse <json>`                | Parse JSON         | `jsonParse {"key":"value"}`               |
+
+## Example
+
+```text
 json config '{"theme":"dark","favorites":["Task Bot"]}'
 
-~~ Print whole thing
 json config
 
-~~ Get specific value
-json config.[theme]   ~~ prints "dark"
-
-~~ Change value
 json config.[theme] light
 
-~~ Add to array
 jsonAppend config.[favorites] "SurtrUI"
 
-~~ Delete key
 jsonDelete config.[theme]
 
-~~ Delete array index
 jsonDelete config.[favorites].0
 
-~~ Save to file
 jsonSave config myconfig.json 2
-
 ```
-Fetch API & parse
-```
-get {{data}}  fetcher -fetch '[{"url":"https://myapisite.com","parser":"json"}]'  -headers '{"User-Agent":"Mozilla/5.0","Accept":"application/json"}' -getdata
 
+## Fetch API data and parse JSON
 
-~~ Parse raw output
+```text
+get {{data}} fetcher -fetch '[{"url":"https://myapisite.com","parser":"json"}]' -headers '{"User-Agent":"Mozilla/5.0","Accept":"application/json"}' -getdata
+
 jsonParse {{data}}
 
-~~ If you want to store it
 json users {{data}}
 
-~~ Access safely
-json users.[0].[name]   ~~ prints first user's name
-lenJson users           ~~ prints how many users
+json users.[0].[name]
 
-```
-Safe check before use
-
-```
-json config {"active":true}
-
-if json config.[active] ?run emit "Config is active!"
-
-~~ Delete when done
-jsonDelete config
+lenJson users
 ```
 
-Pro Tips
+---
 
-Always use [] for keys — even simple ones like [theme], [user-id]
-Never wrap numbers — use .0, .1 for list indices
-Multi-word values are fine: json config.[msg] hello world
-Chain with fetcher: jsonParse {{data}} → then json mydata.[results].0.[title]
-Clean up memory: jsonDelete <name> when finished with big data
-Test in SurtrUI terminal — type commands live to see paths work
+# Surtr Configuration
 
-Surtr JSON turns complex data into simple automation — configs, API results, lists, everything.
+Surtr can be customized through its configuration file.
 
-## Surtr Configuration File – Customize Behavior Easily
+Typical location:
 
-Surtr comes with a powerful configuration file that lets you control how the tool behaves without editing scripts or command-line flags every time.
-
-The file is located at:  
-`C:\Surtr\surtr\surtrconfig.conf`  
-(or in your install folder if you chose a custom path)
-
-You can open it with any text editor (Notepad, VS Code, etc.) and change values as needed.  
-Surtr reads this file on every startup.
-
-### All Available Settings (2025)
-
+```text
+C:\Surtr\surtr\surtrconfig.conf
 ```
-# Allow labels in external scripts (useful for modular automation)
+
+or the equivalent location in your installation directory.
+
+The configuration file can be opened with any text editor.
+
+## Example configuration
+
+```ini
 allowExternalScriptLabels=yes
 
-# Automatically back up watched files for easy restoration when needed 
 autoBackupFileOnWatch=yes
 
-# Show Surtr in the system tray
 trayIcon=yes
 
-# Display warnings when using safemode in parsing malformed commands
 showSafeModeWarnings=yes
 
-# Base installation path (used by SurtrUI and some commands)
 surtrPath=C:\\Surtr\\surtr
 
-# How long WebUI waits for Surtr to respond (seconds)
 webuiSurtrWaitTimeout=120
 
-# Use the built-in Surtr dark theme for WebUI
 useWebuiDefaultSurtrTheme=yes
 
-# Enable Surtr's custom theme in SurtrUI desktop app
 useSurtrTheme=no
 
-# Where to show command/script output:
-#   app   → captured in SurtrUI terminal
-#   shell → live in new CMD window
 surtrUiOutput=shell
 
-# When running scripts/commands:
-#   yes → CMD window stays open after finish (great for debugging)
-#   no  → CMD window closes automatically when done
 keepOutputShellOpen=no
 
-# When using Task Bot:
-#   yes → shows the console window during scheduled tasks
-#   no  → tasks run silently (no visible window)
 showShellWhenRunningTask=yes
 ```
 
-How to Use & Customize
+### Popular customizations
 
-Open the config file
-Go to C:\Surtr\surtr\ → open surtrconfig.conf in Notepad or any editor.
-Change a setting
-Example: Want the console to stay open every time?
-Change this line: `keepOutputShellOpen=no` to `keepOutputShellOpen=yes`
-Save & restart
-Save the file → restart SurtrUI or Surtr → new setting is active.
+**Keep command windows open**
 
-Popular Customizations
+```ini
+keepOutputShellOpen=yes
+```
 
-Debugging scripts → keepOutputShellOpen=yes + surtrUiOutput=shell
-→ Every run opens a CMD window that stays open so you can see errors/output
-Silent Task Bot jobs → showShellWhenRunningTask=no
-→ Scheduled tasks run invisibly in background
-Cleaner WebUI look → useWebuiDefaultSurtrTheme=yes
-→ Applies Surtr’s dark theme to the browser interface
-Hide tray icon → trayIcon=no
-→ SurtrUI closes completely instead of minimizing
+**Run Task Bot jobs silently**
 
-Notes
+```ini
+showShellWhenRunningTask=no
+```
 
-Be careful when modifying settings because Surtr may raise an error or crash if a setting is wrongly modified or invalid
-Changes take effect only after restarting Surtr/SurtrUI
-No need to restart Windows — just the app
-Backup the config file before big changes (easy copy-paste)
+**Use the built-in WebUI theme**
 
-This single file gives you deep control over Surtr’s behavior — from visual feedback to silent background automation.
+```ini
+useWebuiDefaultSurtrTheme=yes
+```
 
+**Hide the system tray icon**
 
+```ini
+trayIcon=no
+```
 
-Download & Get Started <br>
-Latest Release → Download Installer <br>
-No ads. No tracking. No subscriptions. <br>
-Just powerful, reliable automation — completely free.  <br>
-Made with 🔥 by Victor James  <br>
-Questions or ideas? → Open an issue or email thescreenbot@gmail.com  <br>
-Need help building a Surtr script → email thescreenbot@gmail.com  <br>
-Star the repo if it helps you — ⭐ <br>
+Restart Surtr after configuration changes.
 
-Surtr is free and open-source forever — but development takes time, coffee, and motivation!  
-If Surtr helps you automate better, saves hours, or just makes you smile — consider donating to Surtr development.  
+Always keep a backup of your configuration file before making major changes.
 
-Every donation keeps new features coming and the project alive. Thank you! ☕🔥 <br>
+---
 
+# Troubleshooting
+
+## Surtr does not start from source
+
+Confirm that you are using the recommended Python version:
+
+```bat
+python --version
+```
+
+Recommended:
+
+```text
+Python 3.11.9
+```
+
+Then reinstall dependencies:
+
+```bat
+python -m pip install -r requirements.txt
+```
+
+## OCR is not working
+
+Check:
+
+```text
+resources\OcR\tesseract.exe
+```
+
+or verify the system installation:
+
+```bat
+tesseract --version
+```
+
+If Windows cannot find `tesseract`, install it or place the Tesseract files in:
+
+```text
+resources\OcR
+```
+
+## A dependency is missing
+
+Run:
+
+```bat
+python -m pip install -r requirements.txt
+```
+
+If you are using a virtual environment, make sure it is activated first.
+
+## Surtr works from the installer but not from source
+
+Make sure you have:
+
+1. Python 3.11.9
+2. All requirements installed
+3. Tesseract configured
+4. The project files in their expected locations
+5. The virtual environment activated
+
+Then run:
+
+```bat
+python autoscreen.py
+```
+
+---
+
+# Project Philosophy
+
+Surtr started with a simple problem:
+
+**Automation should not break just because a window moved.**
+
+From that idea, it grew into a much larger automation framework combining:
+
+* Visual recognition
+* OCR
+* Automation scripting
+* GUI tooling
+* Remote browser control
+* Task scheduling
+* Downloading
+* Web fetching
+* JSON processing
+* Macro recording
+
+It is not meant to replace every automation framework.
+
+It is meant to be another option — especially when traditional automation starts becoming fragile.
+
+---
+
+# Open Source
+
+Surtr is **free and open source**.
+
+The source code is available so developers can:
+
+* Study how it works
+* Modify it
+* Build new features
+* Create custom commands
+* Improve existing systems
+* Report bugs
+* Submit fixes
+* Experiment with the framework
+
+The project is still evolving, and you may encounter bugs or unfinished areas. That's part of the journey.
+
+If you find something broken, please open an issue with:
+
+* What you were trying to do
+* What you expected
+* What actually happened
+* Your Python version
+* Your Windows version
+* Relevant error output
+* Steps to reproduce the problem
+
+Good bug reports make Surtr better for everyone.
+
+---
+
+# Contributing
+
+Pull requests, ideas, bug reports, and improvements are welcome.
+
+Before submitting a large change, opening an issue to discuss the idea can save time for everyone.
+
+When contributing:
+
+* Keep changes focused
+* Avoid unnecessary dependencies
+* Preserve Windows compatibility
+* Test automation features before submitting
+* Document new commands and features
+* Keep security in mind
+
+---
+
+# Download
+
+### Latest Release
+
+**[Download Surtr](https://github.com/vyixor/surtr/releases/latest)**
+
+No ads.
+
+No subscriptions.
+
+No cloud dependency.
+
+Just Windows automation.
+
+---
+
+# Documentation
+
+Full documentation:
+
+**[Surtr Documentation](http://screenbot.cu.ma/docs.php)**
+
+You can also run:
+
+```text
+define
+```
+
+inside Surtr to explore available commands and functionality.
+
+---
+
+# Support the Project
+
+Surtr is free and open-source.
+
+Development takes time, testing, debugging, and a ridiculous amount of coffee. ☕🔥
+
+If Surtr saves you time, helps automate something annoying, or simply makes your workflow better, consider supporting the project.
+
+Every bit of support helps keep development moving.
+
+---
+
+<div align="center">
+
+### Surtr ⚔️🔥
+
+**Just keep building.**
+
+Made with 🔥 by Victor James
+
+[GitHub](https://github.com/vyixor/surtr) · [Issues](https://github.com/vyixor/surtr/issues) · [Releases](https://github.com/vyixor/surtr/releases)
+
+⭐ **Star the repository if Surtr helps you.**
+
+</div>
